@@ -1,0 +1,62 @@
+import React from "react";
+import { Card, CardBody, Badge, CustomInput } from "reactstrap";
+import { NavLink } from "react-router-dom";
+
+import { Colxx } from "../common/CustomBootstrap";
+import todo from "../../data/todo"
+
+const TodoListItem = ({ item=[], handleCheckChange,isSelected }) => {
+  todo.map(i=>
+    item.push(i));
+    console.log(item)
+  return (
+    <Colxx xxs="12">
+      <Card className="card d-flex mb-3">
+        <div className="d-flex flex-grow-1 min-width-zero">
+          <CardBody className="align-self-center d-flex flex-column flex-md-row justify-content-between min-width-zero align-items-md-center">
+            <NavLink
+              to="#"
+              id={`toggler${item[0].id}`}
+              className="list-item-heading mb-0 truncate w-40 w-xs-100  mb-1 mt-1"
+            >
+              <i
+                className={`${
+                  item.status === "COMPLETED"
+                    ? "simple-icon-check heading-icon"
+                    : "simple-icon-refresh heading-icon"
+                }`}
+              />
+              <span className="align-middle d-inline-block">{item[0].title}</span>
+            </NavLink>
+            <p className="mb-1 text-muted text-small w-15 w-xs-100">
+              {item[0].category}
+            </p>
+            <p className="mb-1 text-muted text-small w-15 w-xs-100">
+              {item[0].createDate}
+            </p>
+            <div className="w-15 w-xs-100">
+              <Badge color={item[0].labelColor} pill>
+                {item[0].label}
+              </Badge>
+            </div>
+          </CardBody>
+          <div className="custom-control custom-checkbox pl-1 align-self-center mr-4">
+            <CustomInput
+              className="itemCheck mb-0"
+              type="checkbox"
+              id={`check_${item[0].id}`}
+              checked={isSelected}
+              onChange={event => handleCheckChange(event, item[0].id)}
+              label=""
+            />
+          </div>
+        </div>
+        <div className="card-body pt-1">
+          <p className="mb-0">{item[0].detail}</p>
+        </div>
+      </Card>
+    </Colxx>
+  );
+};
+
+export default React.memo(TodoListItem);
