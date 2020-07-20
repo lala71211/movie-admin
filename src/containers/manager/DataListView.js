@@ -17,7 +17,7 @@ const DataListView = ({ genre = { id: 1, name: "" }, isSelect, collect, onCheckI
         >
           <div className="pl-2 d-flex flex-grow-1 min-width-zero">
             <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
-              <NavLink to={`?p=${genre.id}`} className="w-40 w-sm-100">
+              <NavLink to={`${genre.id}`} className="w-40 w-sm-100">
                 <p className="list-item-heading mb-1 truncate">
                   {genre.name}
                 </p>

@@ -36,7 +36,7 @@ const EditActorPage = (props) => {
       <Row>
         <Colxx xxs="12">
           <Breadcrumb
-            heading="menu.form-validations"
+            heading="menu.form-edit-actor"
             match={props.match}
           />
           <Separator className="mb-5" />
@@ -45,7 +45,7 @@ const EditActorPage = (props) => {
       <Row>
         <Colxx xs="12" md="6" className="mb-3">
           <h5 className="mb-4">
-            <IntlMessages id="forms.validation-formik" />
+            <IntlMessages id="forms.edit-actor-title" />
           </h5>
           <FormikCustomComponents actor={actor} />
 

@@ -1,21 +1,19 @@
 import React, { Component, Fragment } from "react";
 import { Row } from "reactstrap";
 
-import axios from "axios";
-
-import { serverPath } from "../../../constants/defaultValues";
-
 import ListPageHeading from "../../../containers/manager/ListPageHeading";
 import DataListView from "../../../containers/manager/DataListView";
 import ContextMenuContainer from "../../../containers/manager/ContextMenuContainer";
 import AddNewGenreModal from "../../../containers/manager/AddNewGenreModal";
 import EditGenreModal from "../../../containers/manager/EditGenreModal";
+import { NotificationManager } from "../../../components/common/react-notifications";
+
+import { connect } from "react-redux";
+import {getListGenres, addGenre, editGenre } from "../../../redux/genre/actions"
 
 function collect(props) {
   return { data: props.data };
 }
-
-const apiUrl = serverPath + "/api/genre";
 
 class GenrePage extends Component {
 
@@ -46,11 +44,13 @@ class GenrePage extends Component {
       search: "",
       selectedItems: [],
       lastChecked: null,
-      isLoading: false,
       genreForm: {
         id: 0,
         name: ""
-      }
+      },
+      // isLoading: false,
+      // items: [],
+      // error: ''
     };
   }
 
@@ -65,8 +65,15 @@ class GenrePage extends Component {
       });
       return false;
     });
+    
   }
-
+  componentDidUpdate(previousProps)
+  {
+    if (previousProps.data !== this.props.data) {
+    this.dataListRender();
+    }
+    
+  }
   componentWillUnmount() {
     this.mouseTrap.unbind("ctrl+a");
     this.mouseTrap.unbind("command+a");
@@ -134,18 +141,22 @@ class GenrePage extends Component {
       });
     }
 
-    let selectedItems = this.state.selectedItems;
+    let {selectedItems,genreForm} = this.state;
+    let {items} = this.props;
     if (selectedItems.includes(id)) {
       selectedItems = selectedItems.filter(x => x !== id);
     } else {
       selectedItems.push(id);
     }
+    let selectGenre = items.filter(x => x.id === id);
+    genreForm.id =  selectGenre[0].id;
+    genreForm.name = selectGenre[0].name;
     this.setState({
-      selectedItems
+      selectedItems, genreForm
     });
-
+    
     if (event.shiftKey) {
-      var items = this.state.items;
+  
       var start = this.getIndex(id, items, "id");
       var end = this.getIndex(this.state.lastChecked, items, "id");
       items = items.slice(Math.min(start, end), Math.max(start, end) + 1);
@@ -187,25 +198,13 @@ class GenrePage extends Component {
     return false;
   };
 
-  async dataListRender() {
-    const {
-
-      selectedOrderOption,
-      search
-    } = this.state;
-
-    const response = await axios
-      .get(
-        `${apiUrl}/?orderBy=${selectedOrderOption.column}&search=${search}`
-      )
-
-    const { data } = response;
-    // console.log(response);
+  dataListRender() {
+    const {selectedOrderOption,search} = this.state;
     this.setState({
-      items: data.result,
-      selectedItems: [],
-      isLoading: true
+      selectedItems: []
     });
+    this.props.getListGenres(selectedOrderOption,search)
+    console.log("Render")
   }
 
   toggleEditModal = () => {
@@ -222,39 +221,44 @@ class GenrePage extends Component {
 
   handleAddSubmit = e => {
     const { genreForm } = this.state;
-
-    axios
-      .post(`${apiUrl}/`, genreForm)
-      .then(res => {
-        this.toggleModal();
-        this.dataListRender();
-      })
-      .catch(error => console.log(error.response))
+    this.props.addGenre(genreForm)
+    this.toggleModal();
+    this.dataListRender();
+    // axios
+    //   .post(`${apiUrl}/`, genreForm)
+    //   .then(res => {
+    //     this.toggleModal();
+    //     this.dataListRender();
+    //   })
+    //   .catch(error => console.log(error.response))
   }
 
   handleEditSubmit = e => {
     const { genreForm } = this.state;
-    axios
-      .put(`${apiUrl}/${genreForm.id}`, genreForm)
-      .then(res => {
-        this.toggleEditModal();
-        this.dataListRender();
-      })
-      .catch(error => console.log(error.response))
+    this.props.editGenre(genreForm)
+    this.toggleEditModal();
+    this.dataListRender();
+    // axios
+    //   .put(`${apiUrl}/${genreForm.id}`, genreForm)
+    //   .then(res => {
+    //     this.toggleEditModal();
+    //     this.dataListRender();
+    //   })
+    //   .catch(error => console.log(error.response))
   }
 
   onContextMenuClick = (e, data, target) => {
 
     if (data.action === "edit") {
       this.toggleEditModal();
-      const { items } = this.state;
+      const { items } = this.props;
       let selectedGenre = items.find(item => item.id === data.data);
       this.setState({ selectedItems: [data.data], genreForm: selectedGenre })
     }
     else if (data.action === "delete") {
       console.log("onContextMenuClick - action : ", data.action);
     }
-
+    
   };
 
   onContextMenu = (e, data) => {
@@ -268,10 +272,21 @@ class GenrePage extends Component {
 
     return true;
   };
+  createNotification = (className) => {
+    let cName = className || "";
+
+    NotificationManager.warning(
+      "Chỉ được chọn 1 để sửa",
+      "Thông báo",
+      5000,
+      null,
+      null,
+      cName
+    );
+  }
 
   render() {
     const {
-      items,
       selectedOrderOption,
       selectedItems,
       orderOptions,
@@ -280,10 +295,10 @@ class GenrePage extends Component {
       editModalOpen,
       genreForm
     } = this.state;
+    
+    const { match,items,isLoading} = this.props;
 
-    const { match } = this.props;
-
-    return !this.state.isLoading ? (
+    return isLoading ? (
       <div className="loading" />
     ) : (
         <Fragment>
@@ -304,6 +319,7 @@ class GenrePage extends Component {
               orderOptions={orderOptions}
               pageSizes={pageSizes}
               toggleModal={this.toggleModal}
+              toggleEditModal={this.toggleEditModal}
             />
             <AddNewGenreModal
               modalOpen={addModalOpen}
@@ -320,12 +336,12 @@ class GenrePage extends Component {
               handleSubmit={this.handleEditSubmit}
             />
             <Row className="justify-content-center">
-              {this.state.items.map(genre => {
+              {items.map(genre => {
                 return (
                   <DataListView
                     key={genre.id}
                     genre={genre}
-                    isSelect={this.state.selectedItems.includes(genre.id)}
+                    isSelect={selectedItems.includes(genre.id)}
                     onCheckItem={this.onCheckItem}
                     collect={collect}
                   />
@@ -341,4 +357,17 @@ class GenrePage extends Component {
       );
   }
 }
-export default GenrePage;
+const mapStateToProps = ({ genreData }) => {
+  const { items, isLoading, error } = genreData;
+  // console.log(items,isLoading)
+  return { items, isLoading, error };
+};
+
+export default connect(
+  mapStateToProps,
+  {
+    getListGenres,
+    addGenre,
+    editGenre,
+  }
+)(GenrePage);

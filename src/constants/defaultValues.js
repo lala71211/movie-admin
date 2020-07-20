@@ -15,7 +15,8 @@ export const localeOptions = [
 export const searchPath = "/app/pages/search";
 export const servicePath = "https://api.coloredstrategies.com";
 export const serverPath = "http://localhost:8080"
-export const apiActor = serverPath + "/api/actors/"
+export const apiActor = serverPath + "/api/actors"
+export const apiGenre = serverPath + "/api/genre"
 export const firebaseConfig = {
   apiKey: "AIzaSyCCeL2iNBnZq-8rRa1vPapvwmrfLnhNnT4",
   authDomain: "movie-app-d4c77.firebaseapp.com",

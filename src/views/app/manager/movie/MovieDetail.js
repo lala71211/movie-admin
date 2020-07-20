@@ -252,7 +252,7 @@ class DetailsPages extends Component {
                 <FormikCustomComponents />
               </TabPane>
               <TabPane tabId="3">
-                <NewComments className="mb-4" displayRate={true} />
+                <NewComments className="mb-4" displayRate={false} />
               </TabPane>
               <TabPane tabId="4">
                 <NewComments className="mb-4" displayRate={true} />

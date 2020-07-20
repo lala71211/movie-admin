@@ -54,7 +54,6 @@ export const resetPasswordError = (message) => ({
 });
 
 
-
 export const registerUser = (user, history) => ({
   type: REGISTER_USER,
   payload: { user, history }

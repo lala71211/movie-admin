@@ -66,6 +66,7 @@ module.exports = {
     "menu.genre-list": "Danh sách thể loại",
     "menu.movie-list": "Danh sách phim",
     "menu.actor-list":"Danh sách diễn viên",
+    "menu.form-edit-actor":"Quản lý diễn viên",
     "menu.manager": "Quản lý",
     "menu.genres": "Thể loại",
     "menu.movies": "Phim",
@@ -605,6 +606,7 @@ module.exports = {
     "modal.size": "Size",
     "modal.launch-large-modal": "Launch Large Modal",
     "modal.launch-small-modal": "Launch Small Modal",
+    "modal.multi-select-edit":"Chỉ được chọn 1 để sửa",
 
     /* 07.16.Navigation */
     "nav.basic": "Nav Basic",

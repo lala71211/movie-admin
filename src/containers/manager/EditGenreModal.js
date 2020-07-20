@@ -10,7 +10,8 @@ import {
 } from "reactstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 
-const EditGenreModal = ({ modalOpen, toggleModal, genre = { id: 0, name: "" }, handleChange, handleSubmit }) => {
+const EditGenreModal = ({ modalOpen, toggleModal, genre , handleChange, handleSubmit }) => {
+  // console.log(genre);
   return (
     <Modal
       isOpen={modalOpen}

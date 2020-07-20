@@ -1,18 +1,52 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody,
   ModalFooter,
+  CardImg,
   Input,
   Label
 } from "reactstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 import DropzoneExample from "../forms/DropzoneExample";
 import SingleReactSelect from "../forms/SingleReactSelect";
+import { storage } from "../../helpers/Firebase";
 
-const EditActorModal = ({ modalOpen, toggleEditModal, handleChange, handleSubmit, handleChangeSelect, actor={ id: 0, name: "", nation:null, avatar:null},handleImage }) => {
+const EditActorModal = ({ modalOpen, toggleEditModal, handleChange, handleSubmit, handleChangeSelect, actor,handleImage }) => {
+// console.log(actor)
+const [imgUrl, setImgUrl] = useState("http://via.placeholder.com/92x136")
+  useEffect(() => {
+    if (actor.image != null) {
+    let pathReference = storage.refFromURL("gs://movie-app-d4c77.appspot.com/avatar");
+    let starsRef = pathReference.child(actor.image);
+
+    starsRef
+      .getDownloadURL()
+      .then((url) => {
+        // let img = document.querySelector(".avatar");
+        setImgUrl(url)
+      })
+      .catch((error) => {
+        // console.log(error);
+        switch (error.code) {
+          case "storage/object-not-found":
+            break;
+
+          case "storage/unauthorized":
+            // User doesn't have permission to access the object
+            break;
+
+          case "storage/unknown":
+            // Unknown error occurred, inspect the server response
+            break;
+
+          default:
+            break;
+        }
+      });
+  }})
   return (
     <Modal
       isOpen={modalOpen}
@@ -23,14 +57,21 @@ const EditActorModal = ({ modalOpen, toggleEditModal, handleChange, handleSubmit
         <IntlMessages id="forms.edit-actor-title" />
       </ModalHeader>
       <ModalBody>
+      {/* <img
+              alt={actor.name}
+              src={imgUrl}
+              className="list-thumbnail responsive border-0 card-img-left"
+              style={{ marginBottom: "15px", height:"1%", width:"1%" }}
+            /> */}
+             <CardImg top alt={actor.name} src={imgUrl} width ="80px" height="500px"/>
         <Label>
           <IntlMessages id="forms.actor-name" />
         </Label>
-        <Input name="name" onChange={handleChange} value={actor.name} placeholder={actor.name} />
+        <Input name="name" onChange={handleChange} value={actor.name} style={{ marginBottom:"15px"}}/>
         <Label>
           <IntlMessages id="forms.actor-nation" />
         </Label>
-        <SingleReactSelect handleChangeSelect={handleChangeSelect} selectedOption={actor.nation} placeholder={actor.nation}/>
+        <SingleReactSelect handleChangeSelect={handleChangeSelect} selectedOption={actor.nation}/>
         <Label>
           <IntlMessages id="forms.actor-avatar" />
         </Label>

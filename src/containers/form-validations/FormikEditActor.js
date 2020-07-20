@@ -19,7 +19,7 @@ import {
 import { Colxx } from "../../components/common/CustomBootstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 import DropzoneExample from "../forms/DropzoneExample";
-import { getUrlImage } from "../../helpers/Utils";
+// import { getUrlImage } from "../../helpers/Utils";
 
 const SignupSchema = Yup.object().shape({
   email: Yup.string()
@@ -70,7 +70,7 @@ const options = [
 
 const FormikCustomComponents = ({ actor }) => {
   const [imgUrl, setImgUrl] = useState(DEFAULT_IMAGE);
-
+  const [editImg,setEditImg] = useState(DEFAULT_IMAGE);
   useEffect(() => {
 
     if (actor.avatar !== "") {
@@ -104,9 +104,11 @@ const FormikCustomComponents = ({ actor }) => {
 
   useEffect(() => {
     actor.nation = options.filter((nation) => nation.value === actor.nation);
-    console.log('asb')
+    // console.log('asb')
   })
-
+  // useEffect(() => {
+  //   handleSubmit();
+  // },[])
   function handleSubmit(values, { setSubmitting }) {
     const payload = {
       ...values,
@@ -124,12 +126,11 @@ const FormikCustomComponents = ({ actor }) => {
       <Colxx xxs="12">
         <Card>
           <CardBody>
-            <h6 className="mb-4">Sửa Diễn Viên</h6>
             <img
               src={imgUrl}
               alt="Detail"
               className="card-img-top"
-              style={{ marginBottom: "20px" }}
+              style={{ marginBottom: "20px", height:"15%", width:"15%" }}
             />
             <Formik
               validationSchema={SignupSchema}

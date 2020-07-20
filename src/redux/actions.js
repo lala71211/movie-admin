@@ -71,8 +71,46 @@ export const SURVEY_GET_DETAILS_ERROR = "SURVEY_GET_DETAILS_ERROR";
 export const SURVEY_DELETE_QUESTION = "SURVEY_DELETE_QUESTION";
 export const SURVEY_SAVE = "SURVEY_SAVE";
 
+// GET,ADD, EDIT, DELETE GENRE
+export const GET_GENRE = "GET_GENRE";
+export const ADD_GENRE = "ADD_GENRE";
+export const EDIT_GENRE = "EDIT_GENRE";
+export const DELETE_GENRE = "DELETE_GENRE";
+export const GET_GENRE_SUCCESS = "GET_GENRE_SUCCESS";
+export const GET_GENRE_ERROR = "GET_GENRE_ERROR";
+export const ADD_GENRE_SUCCESS = "ADD_GENRE_SUCCESS";
+export const ADD_GENRE_ERROR = "ADD_GENRE_ERROR";
+export const EDIT_GENRE_SUCCESS = "EDIT_GENRE_SUCCESS";
+export const EDIT_GENRE_ERROR = "EDIT_GENRE_ERROR";
+export const DELETE_GENRE_SUCCESS = "DELETE_GENRE_SUCCESS";
+export const DELETE_GENRE_ERROR = "DELETE_GENRE_ERROR";
+export const DELETE_GENRE_QUESTION = "DELETE_GENRE_QUESTION";
+
+//GET,ADD, EDIT, DELETE ACTOR
+export const GET_ACTOR = "GET_ACTOR";
+export const ADD_ACTOR = "ADD_ACTOR";
+export const EDIT_ACTOR = "EDIT_ACTOR";
+export const DELETE_ACTOR = "DELETE_ACTOR";
+export const GET_ACTOR_SUCCESS = "GET_ACTOR_SUCCESS";
+export const GET_ACTOR_ERROR = "GET_ACTOR_ERROR";
+export const ADD_ACTOR_SUCCESS = "ADD_ACTOR_SUCCESS";
+export const ADD_ACTOR_ERROR = "ADD_ACTOR_ERROR";
+export const EDIT_ACTOR_SUCCESS = "EDIT_ACTOR_SUCCESS";
+export const EDIT_ACTOR_ERROR = "EDIT_ACTOR_ERROR";
+export const DELETE_ACTOR_SUCCESS = "DELETE_ACTOR_SUCCESS";
+export const DELETE_ACTOR_ERROR = "DELETE_ACTOR_ERROR";
+export const DELETE_ACTOR_QUESTION = "DELETE_ACTOR_QUESTION";
+
+//GET,ADD, EDIT, DELETE MOVIE
+export const GET_MOVIE = "GET_MOVIE";
+export const ADD_MOVIE = "ADD_MOVIE";
+export const EDIT_MOVIE = "EDIT_MOVIE";
+export const DELETE_MOVIE = "DELETE_MOVIE";
+
 export * from "./menu/actions";
 export * from "./settings/actions";
 export * from "./auth/actions";
 export * from "./todo/actions";
+export * from "./genre/actions";
+export * from "./actor/actions";
 

@@ -1,16 +1,21 @@
 import React, { Component, Fragment } from "react";
 import { Row } from "reactstrap";
 import axios from "axios";
-
 import { serverPath } from "../../../../constants/defaultValues";
 
 import Pagination from "../../../../containers/manager/Pagination";
 import ContextMenuContainer from "../../../../containers/manager/ContextMenuContainer";
+
 import ListPageHeading from "../../../../containers/manager/ListPageHeading";
 import ImageListView from "../../../../containers/manager/ImageActorListView";
 import ThumbListView from "../../../../containers/manager/ThumbActorListView";
 import AddNewModal from "../../../../containers/manager/AddNewActorModal";
 import EditActorModal from "../../../../containers/manager/EditActorModal";
+import { NotificationManager } from "../../../../components/common/react-notifications";
+
+
+import { connect } from "react-redux";
+import {getListActors, addActor, editActor } from "../../../../redux/actor/actions"
 
 function collect(props) {
   return { data: props.data };
@@ -64,7 +69,10 @@ class Actor extends Component {
         name: "",
         nation: "",
         image: null,
-      }
+      },
+      items: [],
+      messsages: "",
+      visible: false
     };
   }
 
@@ -159,19 +167,26 @@ class Actor extends Component {
         lastChecked: id
       });
     }
-
-    let selectedItems = this.state.selectedItems;
+    // Update actorForm , add selectedItems
+    let { selectedItems, actorForm } = this.state;
+    let {items} = this.props;
     if (selectedItems.includes(id)) {
       selectedItems = selectedItems.filter(x => x !== id);
     } else {
       selectedItems.push(id);
     }
+    let selectActor = items.filter(x => x.id === id);
+    // console.log(selectActor);
+    actorForm.id = selectActor[0].id;
+    actorForm.name = selectActor[0].name;
+    actorForm.nation = selectActor[0].nation;
+    actorForm.image = selectActor[0].avatar;
     this.setState({
-      selectedItems
+      selectedItems, actorForm
     });
 
     if (event.shiftKey) {
-      var items = this.state.items;
+
       var start = this.getIndex(id, items, "id");
       var end = this.getIndex(this.state.lastChecked, items, "id");
       items = items.slice(Math.min(start, end), Math.max(start, end) + 1);
@@ -220,26 +235,14 @@ class Actor extends Component {
       selectedOrderOption,
       search
     } = this.state;
-    axios
-      .get(
-        `${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage - 1}&orderBy=${
-        selectedOrderOption.column
-        }&search=${search}`
-      )
-      .then(res => {
-        // console.log(res);
-        return res.data;
-      })
-      .then(data => {
-        this.setState({
-          totalPage: data.totalPages,
-          items: data.content,
-          selectedItems: [],
-          totalItemCount: data.totalElements,
-          isLoading: true
-        });
-        // console.log(data);
-      });
+    this.setState({
+      selectedItems: [],
+    });
+      this.props.getListActors(selectedPageSize,
+        currentPage,
+        selectedOrderOption,
+        search);
+
   }
 
   handleChangeInput = (e) => {
@@ -248,11 +251,12 @@ class Actor extends Component {
       actorForm: { ...prevState.actorForm, [name]: value }
     }
     ))
-  }
+  };
+
   handleChangeSelect = (e) => {
     const { name, value } = e.target;
     this.setState(prevState => ({
-      actorForm: { ...prevState.actorForm,[name]: value }
+      actorForm: { ...prevState.actorForm, [name]: value }
     }))
     // console.log(this.state.actorForm)
   }
@@ -271,27 +275,25 @@ class Actor extends Component {
     formSubmit.append('name', actorForm.name);
     formSubmit.append('nation', actorForm.nation.label);
     formSubmit.append('image', image);
-    axios
-      .post(`${apiUrl}`, formSubmit)
-      .then(res => {
-        this.toggleModal();
-        this.dataListRender();
-        console.log("success")
-      })
-      .catch(error => console.log(error.response))
+
+    this.props.addActor(formSubmit)
+    this.toggleModal();
+    this.dataListRender();
   }
 
   handleEditSubmit = e => {
-    const { actorForm } = this.state;
-    axios
-      .put(`${apiUrl}/${actorForm.id}`, actorForm)
-      .then(res => {
-        this.toggleEditModal();
-        this.dataListRender();
-      })
-      .catch(error => console.log(error.response))
-  }
+    console.log("submit")
+    const { actorForm, image } = this.state;
+    const formSubmit = new FormData();
+    formSubmit.append('id', actorForm.id);
+    formSubmit.append('name', actorForm.name);
+    formSubmit.append('nation', actorForm.nation.label);
+    formSubmit.append('image', image);
 
+    this.props.editActor(actorForm.id,formSubmit)
+    this.toggleEditModal();
+    this.dataListRender();
+  }
 
   onContextMenuClick = (e, data, target) => {
     console.log(
@@ -299,6 +301,14 @@ class Actor extends Component {
       this.state.selectedItems
     );
     console.log("onContextMenuClick - action : ", data.action);
+    let selectedItems = this.state.selectedItems;
+    if (data.action === "edit" && selectedItems.length > 1) {
+      // console.log("lỗi nè")
+      this.createNotification("filled");
+    }
+    else{
+        this.toggleEditModal();
+    }
   };
 
   onContextMenu = (e, data) => {
@@ -311,14 +321,23 @@ class Actor extends Component {
     console.log(clickedProductId)
     return true;
   };
+  createNotification = (className) => {
+    let cName = className || "";
 
+    NotificationManager.warning(
+      "Chỉ được chọn 1 để sửa",
+      "Thông báo",
+      5000,
+      null,
+      null,
+      cName
+    );
+  }
   render() {
     const {
       currentPage,
-      items,
       displayMode,
       selectedPageSize,
-      totalItemCount,
       selectedOrderOption,
       selectedItems,
       orderOptions,
@@ -329,11 +348,11 @@ class Actor extends Component {
       actorForm,
       dropzoneconfig,
     } = this.state;
-    const { match } = this.props;
+    const { match, totalItemCount,items, isLoading, totalPages} = this.props;
     const startIndex = (currentPage - 1) * selectedPageSize;
     const endIndex = currentPage * selectedPageSize;
 
-    return !this.state.isLoading ? (
+    return isLoading ? (
       <div className="loading" />
     ) : (
         <Fragment>
@@ -372,31 +391,32 @@ class Actor extends Component {
             <EditActorModal
               modalOpen={editModalOpen}
               toggleEditModal={this.toggleEditModal}
-              actor={actorForm.id}
+              actor={actorForm}
               handleChange={this.handleChangeInput}
               handleSubmit={this.handleEditSubmit}
               handleImage={dropzoneconfig}
               handleChangeSelect={this.handleChangeSelect}
             />
+            {/* <NotificationExamples /> */}
             <Row>
-              {this.state.items.map(actor => {
+              {items.map(actor => {
                 // console.log(actor);
-                if (this.state.displayMode === "imagelist") {
+                if (displayMode === "imagelist") {
                   return (
                     <ImageListView
                       key={actor.id}
                       actor={actor}
-                      isSelect={this.state.selectedItems.includes(actor.id)}
+                      isSelect={selectedItems.includes(actor.id)}
                       collect={collect}
                       onCheckItem={this.onCheckItem}
                     />
                   );
-                } else if (this.state.displayMode === "thumblist") {
+                } else if (displayMode === "thumblist") {
                   return (
                     <ThumbListView
                       key={actor.id}
                       actor={actor}
-                      isSelect={this.state.selectedItems.includes(actor.id)}
+                      isSelect={selectedItems.includes(actor.id)}
                       collect={collect}
                       onCheckItem={this.onCheckItem}
                     />
@@ -405,13 +425,13 @@ class Actor extends Component {
                   return null;
               })}
               <Pagination
-                currentPage={this.state.currentPage}
-                totalPage={this.state.totalPage}
+                currentPage={currentPage}
+                totalPage={totalPages}
                 onChangePage={i => this.onChangePage(i)}
               />
               <ContextMenuContainer
                 onContextMenuClick={this.onContextMenuClick}
-                onContextMenu={this.onContextMenu}
+                onContextMenu={this.onContextMenu}               
               />
             </Row>
           </div>
@@ -419,4 +439,18 @@ class Actor extends Component {
       );
   }
 }
-export default Actor;
+
+const mapStateToProps = ({ actorData }) => {
+  const { items, isLoading, error,totalPages,
+    totalItemCount } = actorData;
+  // console.log(items,isLoading)
+  return { items, isLoading, error,totalPages, totalItemCount };
+};
+
+export default connect (
+  mapStateToProps,{
+    getListActors, 
+    addActor, 
+    editActor
+  }
+)(Actor);
