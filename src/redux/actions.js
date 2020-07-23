@@ -103,9 +103,42 @@ export const DELETE_ACTOR_QUESTION = "DELETE_ACTOR_QUESTION";
 
 //GET,ADD, EDIT, DELETE MOVIE
 export const GET_MOVIE = "GET_MOVIE";
+export const GET_MOVIE_ID = "GET_MOVIE_ID";
 export const ADD_MOVIE = "ADD_MOVIE";
 export const EDIT_MOVIE = "EDIT_MOVIE";
 export const DELETE_MOVIE = "DELETE_MOVIE";
+export const GET_MOVIE_SUCCESS = "GET_MOVIE_SUCCESS";
+export const GET_MOVIE_ERROR = "GET_MOVIE_ERROR";
+export const GET_MOVIE_ID_SUCCESS = "GET_MOVIE_ID_SUCCESS";
+export const GET_MOVIE_ID_ERROR = "GET_MOVIE_ID_ERROR";
+export const ADD_MOVIE_SUCCESS = "ADD_MOVIE_SUCCESS";
+export const ADD_MOVIE_ERROR = "ADD_MOVIE_ERROR";
+export const EDIT_MOVIE_SUCCESS = "EDIT_MOVIE_SUCCESS";
+export const EDIT_MOVIE_ERROR = "EDIT_MOVIE_ERROR";
+export const DELETE_MOVIE_SUCCESS = "DELETE_MOVIE_SUCCESS";
+export const DELETE_MOVIE_ERROR = "DELETE_MOVIE_ERROR";
+export const DELETE_MOVIE_QUESTION = "DELETE_MOVIE_QUESTION";
+
+//GET, DELETE COMMENT
+export const GET_COMMENT = "GET_COMMENT";
+export const GET_COMMENT_SUCCESS = "GET_COMMENT_SUCCESS";
+export const GET_COMMENT_ERROR = "GET_COMMENT_ERROR";
+export const DELETE_COMMENT = "DELETE_COMMENT";
+export const DELETE_COMMENT_SUCCESS = "DELETE_COMMENT_SUCCESS";
+export const DELETE_COMMENT_ERROR = "DELETE_COMMENT_ERROR";
+export const DELETE_COMMENT_QUESTION = "DELETE_COMMENT_QUESTION";
+
+//GET, DELETE REVIEW
+export const GET_REVIEW = "GET_REVIEW";
+export const ADD_REVIEW = "ADD_REVIEW";
+export const GET_REVIEW_SUCCESS = "GET_MOVIE_SUCCESS";
+export const GET_REVIEW_ERROR = "GET_MOVIE_ERROR";
+export const ADD_REVIEW_SUCCESS = "ADD_REVIEW_SUCCESS";
+export const ADD_REVIEW_ERROR = "ADD_REVIEW_ERROR";
+export const DELETE_REVIEW = "DELETE_REVIEW";
+export const DELETE_REVIEW_SUCCESS = "DELETE_REVIEW_SUCCESS";
+export const DELETE_REVIEW_ERROR = "DELETE_REVIEW_ERROR";
+export const DELETE_REVIEW_QUESTION = "DELETE_REVIEW_QUESTION";
 
 export * from "./menu/actions";
 export * from "./settings/actions";
@@ -113,4 +146,7 @@ export * from "./auth/actions";
 export * from "./todo/actions";
 export * from "./genre/actions";
 export * from "./actor/actions";
+export * from "./movie/actions";
+export * from "./comment/actions";
+export * from "./review/actions";
 

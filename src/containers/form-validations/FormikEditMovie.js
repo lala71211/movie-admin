@@ -81,6 +81,8 @@ class FormikCustomComponents extends Component {
   };
 
   render() {
+    let {movie} = this.props;
+    // console.log(movie);
     return (
       <Row className="mb-4">
         <Colxx xxs="12">
@@ -88,11 +90,11 @@ class FormikCustomComponents extends Component {
             <CardBody>
               <Formik
                 initialValues={{
-                  email: "test@test.com",
+                  email: movie.title,
                   select: "3",
                   reactSelect: [{ value: "reasonml", label: "ReasonML" }],
                   checkboxGroup: ["kittens"],
-                  customCheckGroup: ["unicorns"],
+                  customCheckGroup: ["unicorns"], 
                   checkboxSingle: true,
                   checkboxCustomSingle: false,
                   radioGroup: "",

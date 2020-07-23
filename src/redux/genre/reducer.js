@@ -10,10 +10,6 @@ const INIT_STATE = {
     items: [],
     isLoading: true,
     error: '',
-    // genreForm: {
-    //     id: 0,
-    //     name: ""
-    //   },
 };
 
 export default (state = INIT_STATE, action) =>{

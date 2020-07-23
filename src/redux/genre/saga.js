@@ -1,4 +1,4 @@
-import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
+import { all, call, fork, put, takeLatest,takeEvery } from 'redux-saga/effects';
 
 import {
     GET_GENRE, ADD_GENRE, EDIT_GENRE, DELETE_GENRE,
@@ -16,7 +16,7 @@ import {
 import { queryListGenres, addGenre, updateGenre } from '../../repository/genre';
 
 export function* watchGetListGenre() {
-    yield takeLatest(GET_GENRE, handleGetListGenre)
+    yield takeEvery(GET_GENRE, handleGetListGenre)
 };
 
 function* handleGetListGenre({ payload }) {

@@ -36,7 +36,8 @@ class TodoApp extends Component {
       modalOpen: false,
       lastChecked: null,
 
-      displayOptionsIsOpen: false
+      displayOptionsIsOpen: false,
+      todoItems: []
     };
   }
 
@@ -134,6 +135,7 @@ class TodoApp extends Component {
       orderColumns,
       selectedItems
     } = this.props.todoApp;
+    // console.log(this.props)
 
     const { messages } = this.props.intl;
 

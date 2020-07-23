@@ -222,8 +222,10 @@ class GenrePage extends Component {
   handleAddSubmit = e => {
     const { genreForm } = this.state;
     this.props.addGenre(genreForm)
-    this.toggleModal();
-    this.dataListRender();
+    // this.toggleModal();
+    // this.dataListRender();
+    setTimeout(() => { this.toggleModal()},100)
+    setTimeout(() => { this.dataListRender()},100)
     // axios
     //   .post(`${apiUrl}/`, genreForm)
     //   .then(res => {
@@ -236,8 +238,10 @@ class GenrePage extends Component {
   handleEditSubmit = e => {
     const { genreForm } = this.state;
     this.props.editGenre(genreForm)
-    this.toggleEditModal();
-    this.dataListRender();
+    // this.toggleEditModal();
+    // this.dataListRender();
+    setTimeout(() => { this.toggleEditModal()},100)
+    setTimeout(() => { this.dataListRender()},100)
     // axios
     //   .put(`${apiUrl}/${genreForm.id}`, genreForm)
     //   .then(res => {

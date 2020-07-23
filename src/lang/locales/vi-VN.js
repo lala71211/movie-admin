@@ -155,6 +155,7 @@ module.exports = {
     "dashboards.completed-orders": "Completed Orders",
     "dashboards.refund-requests": "Refund Requests",
     "dashboards.new-comments": "Bình luận",
+    "dashboards.new-reviews": "Review",
     "dashboards.sales": "Sales",
     "dashboards.orders": "Orders",
     "dashboards.refunds": "Refunds",

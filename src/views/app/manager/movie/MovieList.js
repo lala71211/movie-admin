@@ -1,8 +1,5 @@
 import React, { Component, Fragment } from "react";
 import { Row } from "reactstrap";
-import axios from "axios";
-
-import { serverPath } from "../../../../constants/defaultValues";
 
 import Pagination from "../../../../containers/manager/Pagination";
 import ContextMenuContainer from "../../../../containers/manager/ContextMenuContainer";
@@ -11,10 +8,12 @@ import ImageListView from "../../../../containers/manager/ImageListView";
 import ThumbListView from "../../../../containers/manager/ThumbListView";
 import AddNewModal from "../../../../containers/manager/AddNewModal";
 
+import { connect } from "react-redux";
+import { getListMovies, addMovie, editMovie } from "../../../../redux/movie/actions"
+
 function collect(props) {
   return { data: props.data };
 }
-const apiUrl = serverPath + "/api/movie/";
 
 class MovieListPages extends Component {
 
@@ -50,7 +49,34 @@ class MovieListPages extends Component {
       search: "",
       selectedItems: [],
       lastChecked: null,
-      isLoading: false
+      isLoading: false,
+      movieForm:{
+        id:0,
+        title:"",
+        quality:"",
+        imdb:0,
+        runtime:0,
+        release_date:null,
+        overview:"",
+        popularity:0,
+        language:"",
+        poster:null,
+        view:0,
+        nation:"",
+        adult:0,
+        visible: false,
+        genres: [{
+          id: 0,
+          name: "",
+        },
+         {
+          id: 1,
+          name: "",
+        },
+      ],
+        characters:[],
+        episodes:[]
+      }
     };
   }
 
@@ -141,18 +167,39 @@ class MovieListPages extends Component {
       });
     }
 
-    let selectedItems = this.state.selectedItems;
+    let {selectedItems, movieForm} = this.state;
+    let {items} = this.props;
+
     if (selectedItems.includes(id)) {
       selectedItems = selectedItems.filter(x => x !== id);
     } else {
       selectedItems.push(id);
     }
+
+    let selectMovie = items.filter(x => x.id === id);
+    movieForm.id = selectMovie[0].id;
+    movieForm.title = selectMovie[0].title;
+    movieForm.quality = selectMovie[0].quality;
+    movieForm.imdb = selectMovie[0].imdb;
+    movieForm.runtime = selectMovie[0].runtime;
+    movieForm.release_date = selectMovie[0].release_date;
+    movieForm.overview = selectMovie[0].overview;
+    movieForm.popularity = selectMovie[0].popularity;
+    movieForm.language = selectMovie[0].language;
+    movieForm.poster = selectMovie[0].poster;
+    movieForm.view = selectMovie[0].view;
+    movieForm.nation = selectMovie[0].nation;
+    movieForm.adult = selectMovie[0].adult;
+    movieForm.visible = selectMovie[0].visible;
+    movieForm.genre = selectMovie[0].genre;
+    movieForm.characters = selectMovie[0].characters;
+    movieForm.episode = selectMovie[0].episode;
+
     this.setState({
       selectedItems
     });
 
     if (event.shiftKey) {
-      var items = this.state.items;
       var start = this.getIndex(id, items, "id");
       var end = this.getIndex(this.state.lastChecked, items, "id");
       items = items.slice(Math.min(start, end), Math.max(start, end) + 1);
@@ -201,24 +248,13 @@ class MovieListPages extends Component {
       selectedOrderOption,
       search
     } = this.state;
-    axios
-      .get(
-        `${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}&orderBy=${
-        selectedOrderOption.column
-        }&search=${search}`
-      )
-      .then(res => {
-        return res.data;
-      })
-      .then(data => {
-        this.setState({
-          totalPage: data.totalPages,
-          items: data.content,
-          selectedItems: [],
-          totalItemCount: data.totalElements,
-          isLoading: true
-        });
-      });
+    this.setState({
+      selectedItems: [],
+    });
+    this.props.getListMovies(selectedPageSize,
+      currentPage,
+      selectedOrderOption,
+      search)
   }
 
   onContextMenuClick = (e, data, target) => {
@@ -243,10 +279,8 @@ class MovieListPages extends Component {
   render() {
     const {
       currentPage,
-      items,
       displayMode,
       selectedPageSize,
-      totalItemCount,
       selectedOrderOption,
       selectedItems,
       orderOptions,
@@ -254,11 +288,11 @@ class MovieListPages extends Component {
       modalOpen,
       categories
     } = this.state;
-    const { match } = this.props;
+    const { match, totalItemCount, items, isLoading, totalPages } = this.props;
     const startIndex = (currentPage - 1) * selectedPageSize;
     const endIndex = currentPage * selectedPageSize;
 
-    return !this.state.isLoading ? (
+    return isLoading ? (
       <div className="loading" />
     ) : (
         <Fragment>
@@ -289,23 +323,23 @@ class MovieListPages extends Component {
               categories={categories}
             />
             <Row>
-              {this.state.items.map(movie => {
-                if (this.state.displayMode === "imagelist") {
+              {items.map(movie => {
+                if (displayMode === "imagelist"  ) {
                   return (
                     <ImageListView
                       key={movie.id}
                       movie={movie}
-                      isSelect={this.state.selectedItems.includes(movie.id)}
+                      isSelect={selectedItems.includes(movie.id)}
                       collect={collect}
                       onCheckItem={this.onCheckItem}
                     />
                   );
-                } else if (this.state.displayMode === "thumblist") {
+                } else if (displayMode === "thumblist"  ) {
                   return (
                     <ThumbListView
                       key={movie.id}
                       movie={movie}
-                      isSelect={this.state.selectedItems.includes(movie.id)}
+                      isSelect={selectedItems.includes(movie.id)}
                       collect={collect}
                       onCheckItem={this.onCheckItem}
                     />
@@ -314,8 +348,8 @@ class MovieListPages extends Component {
                   return null;
               })}
               <Pagination
-                currentPage={this.state.currentPage}
-                totalPage={this.state.totalPage}
+                currentPage={currentPage}
+                totalPage={totalPages}
                 onChangePage={i => this.onChangePage(i)}
               />
               <ContextMenuContainer
@@ -328,4 +362,17 @@ class MovieListPages extends Component {
       );
   }
 }
-export default MovieListPages;
+const mapStateToProps = ({ movieData }) => {
+  const { items, isLoading, error, 
+    totalPages, totalItemCount } = movieData;
+  // console.log(items,isLoading)
+  return { items, isLoading, error, totalPages, totalItemCount };
+};
+
+export default connect(
+  mapStateToProps, {
+    getListMovies,
+    addMovie, 
+    editMovie
+}
+)(MovieListPages);

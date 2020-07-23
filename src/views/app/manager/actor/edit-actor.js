@@ -3,7 +3,7 @@ import { Row } from "reactstrap";
 import IntlMessages from "../../../../helpers/IntlMessages";
 import { Colxx, Separator } from "../../../../components/common/CustomBootstrap";
 import Breadcrumb from "../../../../containers/navs/Breadcrumb";
-import FormikCustomComponents from "../../../../containers/form-validations/FormikEditActor";
+import FormikCustomComponents from "../../../../containers/form-validations/FormikCustomComponents";
 import axios from "axios";
 import { apiActor } from "../../../../constants/defaultValues";
 

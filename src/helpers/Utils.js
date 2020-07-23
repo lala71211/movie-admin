@@ -69,10 +69,10 @@ export const getUrlImage = (
   
       return starsRef
         .getDownloadURL()
-        // .then((url) => {
-        //   // let img = document.querySelector(".avatar");
-        //   return url
-        // })
+        .then((url) => {
+          // let img = document.querySelector(".avatar");
+          return url
+        })
         .catch((error) => {
           switch (error.code) {
             case "storage/object-not-found":
@@ -92,5 +92,5 @@ export const getUrlImage = (
         });
     }
   });
-
 }
+

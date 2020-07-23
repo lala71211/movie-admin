@@ -1,7 +1,5 @@
 import React, { Component, Fragment } from "react";
 import { Row } from "reactstrap";
-import axios from "axios";
-import { serverPath } from "../../../../constants/defaultValues";
 
 import Pagination from "../../../../containers/manager/Pagination";
 import ContextMenuContainer from "../../../../containers/manager/ContextMenuContainer";
@@ -15,13 +13,13 @@ import { NotificationManager } from "../../../../components/common/react-notific
 
 
 import { connect } from "react-redux";
-import {getListActors, addActor, editActor } from "../../../../redux/actor/actions"
+import { getListActors, addActor, editActor } from "../../../../redux/actor/actions"
 
 function collect(props) {
   return { data: props.data };
 }
 // const apiUrl = serverPath + "/api/actor/";
-const apiUrl = serverPath + "/api/actors/";
+
 
 // var handleImage = { 
 //   ,addedfile: (file) =>  console.log(file)
@@ -169,7 +167,7 @@ class Actor extends Component {
     }
     // Update actorForm , add selectedItems
     let { selectedItems, actorForm } = this.state;
-    let {items} = this.props;
+    let { items } = this.props;
     if (selectedItems.includes(id)) {
       selectedItems = selectedItems.filter(x => x !== id);
     } else {
@@ -238,10 +236,10 @@ class Actor extends Component {
     this.setState({
       selectedItems: [],
     });
-      this.props.getListActors(selectedPageSize,
-        currentPage,
-        selectedOrderOption,
-        search);
+    this.props.getListActors(selectedPageSize,
+      currentPage,
+      selectedOrderOption,
+      search);
 
   }
 
@@ -263,6 +261,7 @@ class Actor extends Component {
 
   handleImage = file => {
     // addedfile: (file) =>  console.log(file)
+
     this.setState({ image: file })
     // console.log(this.state.image)
   };
@@ -274,25 +273,36 @@ class Actor extends Component {
     formSubmit.append('id', 0);
     formSubmit.append('name', actorForm.name);
     formSubmit.append('nation', actorForm.nation.label);
-    formSubmit.append('image', image);
+    if (image !== undefined) {
+      formSubmit.append('image', image);
+    }
+    else{
+      formSubmit.append('image', null);
+    }
 
     this.props.addActor(formSubmit)
-    this.toggleModal();
-    this.dataListRender();
+    setTimeout(() => { this.toggleModal() }, 500)
+    setTimeout(() => { this.dataListRender() }, 500)
   }
 
   handleEditSubmit = e => {
     console.log("submit")
     const { actorForm, image } = this.state;
+    console.log(image);
     const formSubmit = new FormData();
     formSubmit.append('id', actorForm.id);
     formSubmit.append('name', actorForm.name);
     formSubmit.append('nation', actorForm.nation.label);
-    formSubmit.append('image', image);
+    if (image !== undefined) {
+      formSubmit.append('image', image);
+    }
+    else{
+      formSubmit.append('image', null);
+    }
 
-    this.props.editActor(actorForm.id,formSubmit)
-    this.toggleEditModal();
-    this.dataListRender();
+    this.props.editActor(actorForm.id, formSubmit)
+    setTimeout(() => { this.toggleEditModal() }, 500)
+    setTimeout(() => { this.dataListRender() }, 500)
   }
 
   onContextMenuClick = (e, data, target) => {
@@ -306,8 +316,8 @@ class Actor extends Component {
       // console.log("lỗi nè")
       this.createNotification("filled");
     }
-    else{
-        this.toggleEditModal();
+    else {
+      this.toggleEditModal();
     }
   };
 
@@ -348,7 +358,7 @@ class Actor extends Component {
       actorForm,
       dropzoneconfig,
     } = this.state;
-    const { match, totalItemCount,items, isLoading, totalPages} = this.props;
+    const { match, totalItemCount, items, isLoading, totalPages } = this.props;
     const startIndex = (currentPage - 1) * selectedPageSize;
     const endIndex = currentPage * selectedPageSize;
 
@@ -431,7 +441,7 @@ class Actor extends Component {
               />
               <ContextMenuContainer
                 onContextMenuClick={this.onContextMenuClick}
-                onContextMenu={this.onContextMenu}               
+                onContextMenu={this.onContextMenu}
               />
             </Row>
           </div>
@@ -441,16 +451,16 @@ class Actor extends Component {
 }
 
 const mapStateToProps = ({ actorData }) => {
-  const { items, isLoading, error,totalPages,
+  const { items, isLoading, error, totalPages,
     totalItemCount } = actorData;
   // console.log(items,isLoading)
-  return { items, isLoading, error,totalPages, totalItemCount };
+  return { items, isLoading, error, totalPages, totalItemCount };
 };
 
-export default connect (
-  mapStateToProps,{
-    getListActors, 
-    addActor, 
-    editActor
-  }
+export default connect(
+  mapStateToProps, {
+  getListActors,
+  addActor,
+  editActor
+}
 )(Actor);

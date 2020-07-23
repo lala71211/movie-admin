@@ -41,6 +41,7 @@ export default (state = INIT_STATE, action) => {
 			return { ...state, loading: false };
 
 		case TODO_GET_LIST_SUCCESS:
+			console.log(action)
 			return { ...state, loading: true, allTodoItems: action.payload, todoItems: action.payload };
 
 		case TODO_GET_LIST_ERROR:

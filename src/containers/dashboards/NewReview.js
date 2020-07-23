@@ -5,39 +5,37 @@ import { NavLink } from "react-router-dom";
 
 import IntlMessages from "../../helpers/IntlMessages";
 
-import { comments } from "../../data/comments";
+import {comments} from "../../data/comments";
 import Rating from "../../components/common/Rating";
+import { connect } from "react-redux";
 
+const NewReviews = ({ className = "", displayRate = false, movieId = 0 }) => {
 
-function NewComments({ className = "", displayRate = false, comment = []}) {
-  // console.log(comment)
   return (
     <Card className={className}>
       <CardBody>
         <CardTitle>
-          <IntlMessages id="dashboards.new-comments" />
+          <IntlMessages id="dashboards.new-reviews" />
         </CardTitle>
-        <div className="dashboard-list-with-user" style={{ height: '540px' }}>
-          <PerfectScrollbar options={{ suppressScrollX: true, wheelPropagation: true }} >
-            {comment.map((item, index) => {
+        <div className="dashboard-list-with-user" style={{height: '540px'}}>
+          <PerfectScrollbar options={{ suppressScrollX: true, wheelPropagation: false }} >
+            {comments.map((item, index) => {
               return (
                 <div key={index}
                   className="d-flex flex-row mb-3 pb-3 border-bottom">
-                  <NavLink to="/app/manager/users/1">
+                  <NavLink to="/app/pages/details">
                     <img
-                      src={item.avatar}
-                      alt={item.username}
+                      src={item.thumb}
+                      alt={item.title}
                       className="img-thumbnail border-0 rounded-circle list-thumbnail align-self-center xsmall"
                     />
                   </NavLink>
 
                   <div className="pl-3 pr-2">
-                    <NavLink to="/app/manager/users/1">
-                      <p className="font-weight-medium mb-0">{item.username}
-                        {/* <i className="simple-icon-user" position="asolute-right"/> */}
-                      </p>
+                    <NavLink to="/app/pages/details">
+                      <p className="font-weight-medium mb-0">{item.title}</p>
                       <p className="text-muted mb-0 text-small">
-                        {item.content}
+                        {item.detail}
                       </p>
                       {displayRate && (
                         <div className="form-group mb-1 mt-2">
@@ -56,4 +54,4 @@ function NewComments({ className = "", displayRate = false, comment = []}) {
   );
 };
 
-export default NewComments;
+export default NewReviews;
