@@ -58,9 +58,10 @@ const ImageListView = ({ actor, isSelect, collect, onCheckItem }) => {
           })}
         >
           <div className="position-relative">
-            <NavLink to={`${actor.id}`} className="w-40 w-sm-100">
+            {/* <NavLink to={`${actor.id}`} className="w-40 w-sm-100">
               <CardImg top alt={actor.name} src={imgUrl} />
-            </NavLink>
+            </NavLink> */}
+              <CardImg top alt={actor.name} src={imgUrl} />
             <Badge
               color={actor.statusColor}
               pill

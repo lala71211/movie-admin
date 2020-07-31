@@ -58,6 +58,7 @@ module.exports = {
     /* 03.Menu */
     "menu.app": "Home",
     "menu.dashboards": "Dashboards",
+    "menu.new-movie": "Thêm phim",
     "menu.default": "Default",
     "menu.analytics": "Thống kê",
     "menu.ecommerce": "Ecommerce",
@@ -474,6 +475,7 @@ module.exports = {
     "forms.actor-nation":"Quốc gia",
     "forms.email": "E-mail",
     "forms.title":"Tên Phim",
+    "forms.details": "Chi tiết phim",
     "forms.imdb":"Imdb",
     "forms.runtime":"Thời lượng",
     "forms.release-date":"Ngày chiếu",
@@ -484,6 +486,7 @@ module.exports = {
     "forms.view":"Lượt xem",
     "forms.nation":"Quốc gia",
     "forms.adult":"Giới hạn tuổi",
+    "forms.genre": "Thể loại",
     "forms.quality":"Chất lượng",
     "forms.email-muted": "We'll never share your email with anyone else.",
     "forms.password": "Password",

@@ -5,9 +5,7 @@ import {
     ADD_MOVIE_SUCCESS, ADD_MOVIE_ERROR,
     EDIT_MOVIE_SUCCESS, EDIT_MOVIE_ERROR,
     DELETE_MOVIE_SUCCESS, DELETE_MOVIE_ERROR, DELETE_MOVIE_QUESTION,
-    // GET_COMMENT, DELETE_COMMENT,
-    // GET_COMMENT_SUCCESS, GET_COMMENT_ERROR,
-    // DELETE_COMMENT_SUCCESS, DELETE_COMMENT_ERROR, DELETE_COMMENT_QUESTION
+
 } from "../actions";
 
 const INIT_STATE = {
@@ -16,6 +14,7 @@ const INIT_STATE = {
     error: '',
     totalPages: 1,
     totalItemCount: 0,
+    genreOptions:[],
     item: {id: 0,
         title: "",
         quality: "",
@@ -59,43 +58,40 @@ export default (state = INIT_STATE, action) => {
             }
         case GET_MOVIE_ID:
             // console.log(action)
-            return { ...state, isLoading: true, error: '', item: {} };
+            return { ...state, isLoading: true, error: '', item: {}, genreOptions:[] };
         case GET_MOVIE_ID_SUCCESS:
             // console.log(action)
+            let temp = [];
+            action.payload.genres.map(genre =>
+                temp.push({
+                    id: genre.id,
+                    value: genre.name,
+                    label: genre.name, 
+                }))
+            // console.log(temp)
             return {
-                ...state, isLoading: false, item: action.payload, error: ''
+                ...state, isLoading: false, item: action.payload, genreOptions:temp, error: ''
             }
         case GET_MOVIE_ID_ERROR:
             // console.log(action)
             return { ...state, isLoading: false, items: [], error: action.payload.message }
         case ADD_MOVIE:
+            console.log(action)
             return { ...state, isLoading: false, error: '' }
         case ADD_MOVIE_SUCCESS:
-            // console.log(action)
+            console.log(action)
             return { ...state, isLoading: false, error: '' };
         case ADD_MOVIE_ERROR:
             return { ...state, isLoading: false, error: action.payload.message }
         case EDIT_MOVIE:
+            console.log(action)
             return { ...state, isLoading: false, error: '' }
         case EDIT_MOVIE_SUCCESS:
-            // console.log(action)
+            console.log(action)
             return { ...state, isLoading: false, error: '' }
         case EDIT_MOVIE_ERROR:
             return { ...state, isLoading: false, error: action.payload.message }
-        // case GET_COMMENT:
-        //     console.log(action)
-        //     return { ...state, isLoading: true, error: '', comments: [] };
-        // case GET_COMMENT_SUCCESS:
-        //     console.log(action)
-        //     return {
-        //         ...state, isLoading: false, comments: action.payload.content,
-        //         totalPages: action.payload.totalPages, totalItemCount: action.payload.totalElements, error: ''
-        //     }
-        // case GET_COMMENT_ERROR:
-        //     console.log(action)
-        //     return {
-        //         ...state, isLoading: false, comments: [], error: action.payload.message
-        //     }
+
         default:
             return { ...state };
     }

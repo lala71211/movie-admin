@@ -5,9 +5,7 @@ import {
     ADD_MOVIE_SUCCESS, ADD_MOVIE_ERROR,
     EDIT_MOVIE_SUCCESS, EDIT_MOVIE_ERROR,
     DELETE_MOVIE_SUCCESS, DELETE_MOVIE_ERROR, DELETE_MOVIE_QUESTION,
-    // GET_COMMENT, DELETE_COMMENT,
-    // GET_COMMENT_SUCCESS, GET_COMMENT_ERROR,
-    // DELETE_COMMENT_SUCCESS, DELETE_COMMENT_ERROR, DELETE_COMMENT_QUESTION
+
 } from "../actions";
 
 export const getListMovies = (selectedPageSize, currentPage, selectedOrderOption, search) => ({
@@ -55,9 +53,9 @@ export const addMovieError = (message) => ({
     payload: message
 });
 
-export const editMovie = (movieForm) => ({
+export const editMovie = (id, movieForm) => ({
     type: EDIT_MOVIE,
-    payload: movieForm
+    payload: { id, movieForm }
 });
 
 export const editMovieSuccess = (message) => ({
@@ -69,20 +67,4 @@ export const editMovieError = (message) => ({
     type: EDIT_MOVIE_ERROR,
     payload: message
 });
-
-// export const getListComments = (selectedPageSize, currentPage, movieId, userId) => ({
-//     type: GET_COMMENT,
-//     payload: { selectedPageSize, currentPage, movieId, userId }
-// });
-
-// export const getListCommentsSuccess = (listComment) => ({
-//     type: GET_COMMENT_SUCCESS,
-//     payload: listComment
-// });
-
-// export const getListCommentError = (message) => ({
-//     type: GET_COMMENT_ERROR,
-//     payload: message
-// });
-
 

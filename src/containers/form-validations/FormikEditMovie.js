@@ -5,18 +5,22 @@ import {
   FormikReactSelect,
   FormikDatePicker
 } from "./FormikFields";
-import { Row, Card, CardBody, FormGroup, Label, Button,CardTitle } from "reactstrap";
+
+import { Row, Card, CardBody, FormGroup, Label, Button, CardTitle } from "reactstrap";
 import { Colxx } from "../../components/common/CustomBootstrap";
 import IntlMessages from "../../helpers/IntlMessages";
 import DropzoneExample from "../forms/DropzoneExample";
-// import Todo from "../../components/applications/TodoListItem"
+// import MultiDropzone from "../forms/MultiDropzone";
+import { connect } from "react-redux";
+import { getListGenres } from "../../redux/genre/actions"
+import {editMovie} from "../../redux/movie/actions"
+import moment from 'moment'
 
 const SignupSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required!"),
-  select: Yup.string().required("A select option is required!"),
-  quality: Yup.string().required("Chọn chất lượng"),
+  name: Yup.string()
+    .required("Nhập tên phim"),
+  selectQuality: Yup.string().required("Chọn chất lượng"),
+  selectLanguage: Yup.string().required("Chọn ngôn ngữ"),
   imdb: Yup.number()
     .min(0, "Lớn hơn 0")
     .max(10, "Nhỏ hơn 10")
@@ -24,65 +28,118 @@ const SignupSchema = Yup.object().shape({
   runtime: Yup.number()
     .min(0, "Lớn hơn 0")
     .required("Nhập giá trị"),
-  reactSelect: Yup.array()
-    .min(3, "Pick at least 3 tags")
+  view: Yup.number()
+    .min(0, "Lớn hơn 0")
+    .required("Nhập giá trị"),
+  genres: Yup.array()
+    .min(1, "Chọn ít nhất 1 thể loại")
     .of(
       Yup.object().shape({
         label: Yup.string().required(),
         value: Yup.string().required()
       })
     ),
-  checkboxSingle: Yup.bool().oneOf([true], "Must agree to something"),
-  checkboxCustomSingle: Yup.bool().oneOf([true], "Must agree to something"),
-  checkboxGroup: Yup.array()
-    .min(2, "Pick at least 2 tags")
-    .required("At least one checkbox is required"),
-
-  customCheckGroup: Yup.array()
-    .min(2, "Pick at least 2 tags")
-    .required("At least one checkbox is required"),
-
-  radioGroup: Yup.string().required("A radio option is required"),
-  customRadioGroup: Yup.string().required("A radio option is required"),
-  tags: Yup.array()
-    .min(3, "Pick at least 3 tags")
-    .required("At least one checkbox is required"),
-  switch: Yup.bool().oneOf([true], "Must agree to something"),
+  nation: Yup.string()
+    .required("Nhập tên quốc gia"),
+  adult: Yup.number()
+    .required("Nhập giá trị"),
   date: Yup.date()
     .nullable()
     .required("Date required"),
-  details: Yup.string().required("Please provide the details")
+  details: Yup.string().required("Cung cấp chi tiết phim")
 });
 
-const options = [
-  { value: "food", label: "Food" },
-  { value: "beingfabulous", label: "Being Fabulous", disabled: true },
-  { value: "reasonml", label: "ReasonML" },
-  { value: "unicorns", label: "Unicorns" },
-  { value: "kittens", label: "Kittens" }
-];
 
-class FormikCustomComponents extends Component {
+class FormikEditMovie extends Component {
   constructor(props) {
     super(props);
     this.handleSubmit = this.handleSubmit.bind(this);
-    // console.log(props)
+    this.getGenres = this.getGenres.bind(this);
+    this.fillOptions = this.fillOptions.bind(this);
+    this.state = {
+      options: [],
+      dropzoneconfig: { addedfile: (file) => this.handleImage(file) },
+    }
+
   }
 
   handleSubmit = (values, { setSubmitting }) => {
+    let temp = [];
+    let movieId = this.props.movie.id;
+    let {image} = this.state;
+    values.genres.map(t => 
+      temp.push({
+        name: t.value,
+        id: t.id,
+      }))
     const payload = {
       ...values,
-      reactSelect: values.reactSelect.map(t => t.value)
+      genres: temp
     };
-    setTimeout(() => {
-      console.log(JSON.stringify(payload, null, 2));
-      setSubmitting(false);
-    }, 1000);
+
+    console.log(payload);
+
+    const formSubmit = new FormData();
+    formSubmit.append('id', movieId);
+    formSubmit.append('title', payload.name);
+    formSubmit.append('nation', payload.nation);
+    formSubmit.append('adult', payload.adult);
+    formSubmit.append('genres', payload.genres);
+    formSubmit.append('imdb', payload.imdb);
+    formSubmit.append('language', payload.selectLanguage);
+    formSubmit.append('quality', payload.selectQuality);
+    formSubmit.append('overview', payload.details);
+    formSubmit.append('release_date', payload.date);
+    formSubmit.append('view', payload.view);
+    formSubmit.append('runtime', payload.runtime);
+    if (image !== undefined) {
+      formSubmit.append('poster', image);
+    }
+    else{
+      formSubmit.append('poster', null);
+    }
+
+    console.log(image)
+    this.props.editMovie(movieId, formSubmit)
+    setSubmitting(false);
+
   };
+  handleImage = file => {
+    console.log(file)
+    this.setState({ image: file })
+    console.log(this.state.image)
+  };
+  getGenres() {
+    if (this.props.items === null || this.props.items === undefined) {
+      this.props.getListGenres("", "")
+    }
+  }
+  fillOptions() {
+    let options = [];
+    if (this.props.genres !== undefined) {
+      this.props.genres.map(item =>
+        options.push({
+          id: item.id,
+          value: item.name,
+          label: item.name
+        })
+      )
+      // console.log(options)
+      this.setState({ options: options })
+    }
+  }
+
+  componentDidMount() {
+    this.getGenres();
+    setTimeout(() => {
+      this.fillOptions();
+    }, 1000)
+  }
 
   render() {
-    let {movie} = this.props;
-    // console.log(movie);
+    let { movie, genreOptions } = this.props;
+    let { options, dropzoneconfig } = this.state;
+    let releaseDate = moment(movie.release_date, 'LLL');
     return (
       <Row className="mb-4">
         <Colxx xxs="12">
@@ -90,18 +147,17 @@ class FormikCustomComponents extends Component {
             <CardBody>
               <Formik
                 initialValues={{
-                  email: movie.title,
-                  select: "3",
-                  reactSelect: [{ value: "reasonml", label: "ReasonML" }],
-                  checkboxGroup: ["kittens"],
-                  customCheckGroup: ["unicorns"], 
-                  checkboxSingle: true,
-                  checkboxCustomSingle: false,
-                  radioGroup: "",
-                  customRadioGroup: "",
-                  tags: ["cake", "dessert"],
-                  switch: false,
-                  date: null
+                  name: movie.title,
+                  selectQuality: movie.quality,
+                  selectLanguage: movie.language,
+                  runtime: movie.runtime,
+                  view: movie.view,
+                  imdb: movie.imdb,
+                  genres: genreOptions,
+                  date: releaseDate,
+                  details: movie.overview,
+                  nation: movie.nation,
+                  adult: movie.adult
                 }}
                 validationSchema={SignupSchema}
                 onSubmit={this.handleSubmit}>
@@ -116,7 +172,7 @@ class FormikCustomComponents extends Component {
                   touched,
                   isSubmitting
                 }) => (
-                    <Form className="av-tooltip tooltip-label-right">
+                    <Form className="av-tooltip tooltip-label-right" onSubmit={handleSubmit}>
                       <FormGroup row>
                         {/* Title */}
                         <Colxx sm={6}>
@@ -124,10 +180,10 @@ class FormikCustomComponents extends Component {
                             <Label>
                               <IntlMessages id="forms.title" />
                             </Label>
-                            <Field className="form-control" name="email" />
-                            {errors.email && touched.email ? (
+                            <Field className="form-control" name="name" />
+                            {errors.name && touched.name ? (
                               <div className="invalid-feedback d-block">
-                                {errors.email}
+                                {errors.name}
                               </div>
                             ) : null}
                           </FormGroup>
@@ -139,22 +195,22 @@ class FormikCustomComponents extends Component {
                               <IntlMessages id="forms.quality" />
                             </Label>
                             <select
-                              name="select"
+                              name="selectQuality"
                               className="form-control"
-                              value={values.select}
+                              value={values.selectQuality}
                               onChange={handleChange}
                               onBlur={handleBlur}
                             >
                               <option value="">Select an option..</option>
-                              <option value="1">SD</option>
-                              <option value="2">HD</option>
-                              <option value="3">FullHD</option>
-                              <option value="4">4K</option>
+                              <option value="SD">SD</option>
+                              <option value="HD">HD</option>
+                              <option value="FullHD">FullHD</option>
+                              <option value="4K">4K</option>
                             </select>
 
-                            {errors.select && touched.select ? (
+                            {errors.selectQuality && touched.selectQuality ? (
                               <div className="invalid-feedback d-block">
-                                {errors.select}
+                                {errors.selectQuality}
                               </div>
                             ) : null}
                           </FormGroup>
@@ -166,21 +222,21 @@ class FormikCustomComponents extends Component {
                               <IntlMessages id="forms.language" />
                             </Label>
                             <select
-                              name="select"
+                              name="selectLanguage"
                               className="form-control"
-                              value={values.select}
+                              value={values.selectLanguage}
                               onChange={handleChange}
                               onBlur={handleBlur}
                             >
                               <option value="">Select an option..</option>
-                              <option value="1">Phụ đề Việt</option>
-                              <option value="2">Tiếng việt</option>
-                              <option value="3">Engsub</option>
+                              <option value="ja">Japsub</option>
+                              <option value="vn">Vietsub</option>
+                              <option value="en">Engsub</option>
                             </select>
 
-                            {errors.select && touched.select ? (
+                            {errors.selectLanguage && touched.selectLanguage ? (
                               <div className="invalid-feedback d-block">
-                                {errors.select}
+                                {errors.selectLanguage}
                               </div>
                             ) : null}
                           </FormGroup>
@@ -221,6 +277,7 @@ class FormikCustomComponents extends Component {
                               <IntlMessages id="forms.release-date" />
                             </Label>
                             <FormikDatePicker
+                              va
                               name="date"
                               value={values.date}
                               onChange={setFieldValue}
@@ -233,43 +290,74 @@ class FormikCustomComponents extends Component {
                             ) : null}
                           </FormGroup>
                         </Colxx>
-
                         {/* View */}
                         <Colxx sm={3}>
                           <FormGroup className="error-l-100" >
                             <Label>
                               <IntlMessages id="forms.view" />
                             </Label>
-                            <Field className="form-control" name="runtime" type="number" />
-                            {errors.runtime && touched.runtime ? (
+                            <Field className="form-control" name="view" type="number" />
+                            {errors.view && touched.view ? (
                               <div className="invalid-feedback d-block">
-                                {errors.runtime}
+                                {errors.view}
                               </div>
                             ) : null}
                           </FormGroup>
                         </Colxx>
                       </FormGroup>
-
-                      <FormGroup className="error-l-100">
-                        <Label>React Select </Label>
-                        <FormikReactSelect
-                          name="reactSelect"
-                          id="reactSelect"
-                          value={values.reactSelect}
-                          isMulti={true}
-                          options={options}
-                          onChange={setFieldValue}
-                          onBlur={setFieldTouched}
-                        />
-                        {errors.reactSelect && touched.reactSelect ? (
-                          <div className="invalid-feedback d-block">
-                            {errors.reactSelect}
-                          </div>
-                        ) : null}
+                      <FormGroup row>
+                        <Colxx sm={6}>
+                          <FormGroup className="error-l-100">
+                            <Label>
+                              <IntlMessages id="forms.genre" />
+                            </Label>
+                            <FormikReactSelect
+                              name="genres"
+                              id="genres"
+                              value={values.genres}
+                              isMulti={true}
+                              options={options}
+                              onChange={setFieldValue}
+                              onBlur={setFieldTouched}
+                            />
+                            {errors.genres && touched.genres ? (
+                              <div className="invalid-feedback d-block">
+                                {errors.genres}
+                              </div>
+                            ) : null}
+                          </FormGroup>
+                        </Colxx>
+                        <Colxx sm={3}>
+                          <FormGroup className="error-l-100" >
+                            <Label>
+                              <IntlMessages id="forms.nation" />
+                            </Label>
+                            <Field className="form-control" name="nation" />
+                            {errors.nation && touched.nation ? (
+                              <div className="invalid-feedback d-block">
+                                {errors.nation}
+                              </div>
+                            ) : null}
+                          </FormGroup>
+                        </Colxx>
+                        <Colxx sm={3}>
+                          <FormGroup className="error-l-100" >
+                            <Label>
+                              <IntlMessages id="forms.adult" />
+                            </Label>
+                            <Field className="form-control" name="adult" type="number" />
+                            {errors.adult && touched.adult ? (
+                              <div className="invalid-feedback d-block">
+                                {errors.adult}
+                              </div>
+                            ) : null}
+                          </FormGroup>
+                        </Colxx>
                       </FormGroup>
-
                       <FormGroup className="error-l-50">
-                        <Label>Details</Label>
+                        <Label>
+                          <IntlMessages id="forms.details" />
+                        </Label>
                         <Field
                           className="form-control"
                           name="details"
@@ -289,12 +377,12 @@ class FormikCustomComponents extends Component {
                               <CardTitle>
                                 <IntlMessages id="form-components.dropzone" />
                               </CardTitle>
-                              <DropzoneExample />
+                              <DropzoneExample eventHandler={dropzoneconfig} />
                             </CardBody>
                           </Card>
                         </Colxx>
                       </Row>
-                      
+                      {/* 
                       <Row className="mb-4">
                         <Colxx xxs="12">
                           <Card>
@@ -302,14 +390,12 @@ class FormikCustomComponents extends Component {
                               <CardTitle>
                                 <IntlMessages id="form-components.dropzone-multi" />
                               </CardTitle>
-                              <DropzoneExample />
+                              <MultiDropzone eventHandler={handleMultiImage}/>
                             </CardBody>
                           </Card>
                         </Colxx>
-                      </Row>
-                      <Button color="primary" type="submit">
-                        Submit
-                    </Button>
+                      </Row>. */}
+                      <Button color="primary" type="submit" >Submit</Button>
                     </Form>
                   )}
               </Formik>
@@ -320,4 +406,16 @@ class FormikCustomComponents extends Component {
     );
   }
 }
-export default FormikCustomComponents;
+const mapStateToProps = ({ genreData, movieData }) => {
+  const { genres } = genreData;
+  const { genreOptions } = movieData;
+  return { genres, genreOptions };
+
+};
+
+export default connect(
+  mapStateToProps, {
+  getListGenres,
+  editMovie
+}
+)(FormikEditMovie);

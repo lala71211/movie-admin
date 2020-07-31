@@ -4,8 +4,8 @@ import { Switch, Route, Redirect } from "react-router-dom";
 const Actor = React.lazy(() =>
     import(/* webpackChunkName: "second" */ './actor')
 );
-const Edit = React.lazy(() =>
-    import(/* webpackChunkName:"second" */ './edit-actor'));
+// const Edit = React.lazy(() =>
+//     import(/* webpackChunkName:"second" */ './edit-actor'));
 function ActorPages({ match }) {
     return (
         <Suspense fallback={<div className="loading" />}>
@@ -15,10 +15,10 @@ function ActorPages({ match }) {
                     path={`${match.url}/actor-list`}
                     render={props => <Actor {...props} />}
                 />
-                  <Route
+                  {/* <Route
                     path={`${match.url}/:id`}
                     render={props => <Edit {...props} />}
-                />
+                /> */}
                 <Redirect to="/error" />
             </Switch>
         </Suspense>

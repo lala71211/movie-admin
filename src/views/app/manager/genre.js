@@ -142,13 +142,13 @@ class GenrePage extends Component {
     }
 
     let {selectedItems,genreForm} = this.state;
-    let {items} = this.props;
+    let {genres} = this.props;
     if (selectedItems.includes(id)) {
       selectedItems = selectedItems.filter(x => x !== id);
     } else {
       selectedItems.push(id);
     }
-    let selectGenre = items.filter(x => x.id === id);
+    let selectGenre = genres.filter(x => x.id === id);
     genreForm.id =  selectGenre[0].id;
     genreForm.name = selectGenre[0].name;
     this.setState({
@@ -157,11 +157,11 @@ class GenrePage extends Component {
     
     if (event.shiftKey) {
   
-      var start = this.getIndex(id, items, "id");
-      var end = this.getIndex(this.state.lastChecked, items, "id");
-      items = items.slice(Math.min(start, end), Math.max(start, end) + 1);
+      var start = this.getIndex(id, genres, "id");
+      var end = this.getIndex(this.state.lastChecked, genres, "id");
+      genres = genres.slice(Math.min(start, end), Math.max(start, end) + 1);
       selectedItems.push(
-        ...items.map(item => {
+        ...genres.map(item => {
           return item.id;
         })
       );
@@ -255,8 +255,8 @@ class GenrePage extends Component {
 
     if (data.action === "edit") {
       this.toggleEditModal();
-      const { items } = this.props;
-      let selectedGenre = items.find(item => item.id === data.data);
+      const { genres } = this.props;
+      let selectedGenre = genres.find(item => item.id === data.data);
       this.setState({ selectedItems: [data.data], genreForm: selectedGenre })
     }
     else if (data.action === "delete") {
@@ -300,7 +300,7 @@ class GenrePage extends Component {
       genreForm
     } = this.state;
     
-    const { match,items,isLoading} = this.props;
+    const { match,genres,isLoading} = this.props;
 
     return isLoading ? (
       <div className="loading" />
@@ -318,7 +318,7 @@ class GenrePage extends Component {
               startIndex={0}
               endIndex={0}
               selectedItemsLength={selectedItems ? selectedItems.length : 0}
-              itemsLength={items ? items.length : 0}
+              itemsLength={genres ? genres.length : 0}
               onSearchKey={this.onSearchKey}
               orderOptions={orderOptions}
               pageSizes={pageSizes}
@@ -340,7 +340,7 @@ class GenrePage extends Component {
               handleSubmit={this.handleEditSubmit}
             />
             <Row className="justify-content-center">
-              {items.map(genre => {
+              {genres.map(genre => {
                 return (
                   <DataListView
                     key={genre.id}
@@ -362,9 +362,9 @@ class GenrePage extends Component {
   }
 }
 const mapStateToProps = ({ genreData }) => {
-  const { items, isLoading, error } = genreData;
+  const { genres, isLoading, error } = genreData;
   // console.log(items,isLoading)
-  return { items, isLoading, error };
+  return { genres, isLoading, error };
 };
 
 export default connect(

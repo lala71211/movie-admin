@@ -25,7 +25,7 @@ function* handleGetListReview({ payload }) {
 
     try {
         const listReview = yield call(queryListReviews, selectedPageSize, currentPage, movieId, userId);
-        console.log(listReview);
+        // console.log(listReview);
         if (listReview !== undefined) {
             yield put(getListReviewsSuccess(listReview))
         }
@@ -46,7 +46,7 @@ function* handleAddReview({ payload }) {
     // console.log(reviewForm)
     try {
         const newReview = yield call(addReview, reviewForm);
-        console.log(newReview);
+        // console.log(newReview);
         if (newReview.success === "CREATED") {
             yield put(addReviewSuccess(newReview.message))
         }

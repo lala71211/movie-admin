@@ -14,7 +14,7 @@ export default class FormValidationsUi extends Component {
         <Row>
           <Colxx xxs="12">
             <Breadcrumb
-              heading="menu.form-validations"
+              heading="menu.new-movie"
               match={this.props.match}
             />
             <Separator className="mb-5" />
@@ -23,9 +23,6 @@ export default class FormValidationsUi extends Component {
 
         <Row>
           <Colxx xs="12" className="mb-3">
-            <h5 className="mb-4">
-              <IntlMessages id="forms.validation-formik" />
-            </h5>
             <FormikCustomComponents />
           </Colxx>
         </Row>

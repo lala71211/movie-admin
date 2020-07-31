@@ -15,9 +15,9 @@ const INIT_STATE = {
 export default (state = INIT_STATE, action) => {
     switch (action.type) {
         case GET_COMMENT:
+            // console.log(action)
             return { ...state, isLoading: true, error: '', comments: [] };
         case GET_COMMENT_SUCCESS:
-            // console.log(action)
             return {
                 ...state, isLoading: false, comments: action.payload.content,
                 totalPages: action.payload.totalPages, totalItemCount: action.payload.totalElements, error: ''

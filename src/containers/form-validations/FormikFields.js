@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import Select from "react-select";
 import { CustomInput } from "reactstrap";
 
@@ -9,7 +9,7 @@ import "rc-switch/assets/index.css";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-
+import moment from 'moment'
 export class FormikReactSelect extends React.Component {
   handleChange = value => {
     this.props.onChange(this.props.name, value);
@@ -303,27 +303,58 @@ export class FormikSwitch extends React.Component {
   }
 }
 
-export class FormikDatePicker extends React.Component {
+// let date1 = new Date();
+// export class FormikDatePicker extends React.Component {
+//   handleChange = val => {
+//     console.log(val)
+//     this.props.onChange(this.props.name, val);
+//   };
+//   handleBlur = val => {
+//     this.props.onBlur(this.props.name, true);
+//   };
 
+//   render() {
+//     const { name, value, className } = this.props;
+//     return (
+//       <DatePicker
+//         id={name}
+//         dateFormat="dd/mm/yyyy"
+//         name={name}
+//         className={className}
+//         placeholderText="Chọn ngày"
+//         selected={date1}
+//         onChange={this.handleChange}
+//         onBlur={this.handleBlur}
+//       />
+//     );
+//   }
+// }
 
-  handleChange = val => {
-    this.props.onChange(this.props.name, val);
+export const FormikDatePicker = ({name,value,className,onChange,onBlur}) =>{
+  const [startDate, setStartDate] = useState(moment(new Date(),'LLL'));
+
+  const handleChange = val => {
+    let date = formatDate(val)
+    setStartDate(date)
+    onChange(name, moment(val).format("YYYY-MM-DD"));
   };
-  handleBlur = val => {
-    this.props.onBlur(this.props.name, true);
-  };
 
-  render() {
-    const { name, value, className } = this.props;
-    return (
+  const formatDate = date => moment(date, 'LLL')
+
+  const handleBlur = val => {
+    onBlur(name, true);
+  };
+  
+  return(
       <DatePicker
         id={name}
+        dateFormat="DD-MM-YYYY"
         name={name}
         className={className}
-        selected={value}
-        onChange={this.handleChange}
-        onBlur={this.handleBlur}
+        placeholderText="Chọn ngày"
+        selected={startDate}
+        onChange={handleChange}
+        onBlur={handleBlur}
       />
     );
-  }
 }

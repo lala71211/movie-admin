@@ -25,7 +25,7 @@ function* handleGetListGenre({ payload }) {
 
     try {
         const listGenre = yield call(queryListGenres, selectedOrderOption, search);
-        console.log(listGenre);
+        // console.log(listGenre);
         if (!listGenre.message) {
             yield put(getListGenresSuccess(listGenre))
         }

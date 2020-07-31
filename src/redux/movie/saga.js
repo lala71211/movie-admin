@@ -2,7 +2,7 @@ import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 
 import {
     GET_MOVIE, GET_MOVIE_ID, ADD_MOVIE, EDIT_MOVIE, DELETE_MOVIE,
-    // GET_COMMENT, DELETE_COMMENT,
+    
 } from "../actions";
 
 import {
@@ -14,12 +14,10 @@ import {
     addMovieError,
     editMovieSuccess,
     editMovieError,
-    // getListCommentsSuccess,
-    // getListCommentError,
+  
 } from './actions';
 
 import { queryListMovies, queryMovieByID, addMovie, updateMovie } from '../../repository/movie';
-import { queryListComments,} from '../../repository/comment';
 
 export function* watchGetListMovie() {
     yield takeLatest(GET_MOVIE, handleGetListMovie)
@@ -70,7 +68,7 @@ export function* watchAddMovie() {
 
 function* handleAddMovie({ payload }) {
     const movieForm = payload;
-    // console.log(movieForm)
+    console.log(movieForm)
     try {
         const newMovie = yield call(addMovie, movieForm);
         console.log(newMovie);
@@ -106,29 +104,6 @@ function* handleEditMovie({ payload }) {
         yield put(editMovieError(error))
     }
 }
-// export function* watchGetListComment() {
-//     yield takeLatest(GET_COMMENT, handleGetListComment)
-// };
-
-// function* handleGetListComment({ payload }) {
-//     const selectedPageSize = payload.selectedPageSize;
-//     const currentPage = payload.currentPage;
-//     const movieId = payload.movieId;
-//     const userId = payload.userId;
-//     console.log("asdsf")
-//     try {
-//         const listComment = yield call(queryListComments, selectedPageSize, currentPage, movieId, userId);
-//         console.log(listComment);
-//         if (!listComment.message) {
-//             yield put(getListCommentsSuccess(listComment))
-//         }
-//         else {
-//             yield put(getListCommentError(listComment.message))
-//         }
-//     } catch (error) {
-//         yield put(getListCommentError(error))
-//     }
-// }
 
 export default function* rootSaga() {
     yield all([
@@ -136,6 +111,5 @@ export default function* rootSaga() {
         fork(watchAddMovie),
         fork(watchEditMovie),
         fork(watchGetMovieByID),
-        // fork(watchGetListComment),
     ]);
 }

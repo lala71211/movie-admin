@@ -50,32 +50,32 @@ class MovieListPages extends Component {
       selectedItems: [],
       lastChecked: null,
       isLoading: false,
-      movieForm:{
-        id:0,
-        title:"",
-        quality:"",
-        imdb:0,
-        runtime:0,
-        release_date:null,
-        overview:"",
-        popularity:0,
-        language:"",
-        poster:null,
-        view:0,
-        nation:"",
-        adult:0,
+      movieForm: {
+        id: 0,
+        title: "",
+        quality: "",
+        imdb: 0,
+        runtime: 0,
+        release_date: null,
+        overview: "",
+        popularity: 0,
+        language: "",
+        poster: null,
+        view: 0,
+        nation: "",
+        adult: 0,
         visible: false,
         genres: [{
           id: 0,
           name: "",
         },
-         {
+        {
           id: 1,
           name: "",
         },
-      ],
-        characters:[],
-        episodes:[]
+        ],
+        characters: [],
+        episodes: []
       }
     };
   }
@@ -101,9 +101,7 @@ class MovieListPages extends Component {
   }
 
   toggleModal = () => {
-    this.setState({
-      modalOpen: !this.state.modalOpen
-    });
+    this.props.history.push(`new-movie`)
   };
 
   changeOrderBy = column => {
@@ -167,8 +165,8 @@ class MovieListPages extends Component {
       });
     }
 
-    let {selectedItems, movieForm} = this.state;
-    let {items} = this.props;
+    let { selectedItems, movieForm } = this.state;
+    let { items } = this.props;
 
     if (selectedItems.includes(id)) {
       selectedItems = selectedItems.filter(x => x !== id);
@@ -324,7 +322,7 @@ class MovieListPages extends Component {
             />
             <Row>
               {items.map(movie => {
-                if (displayMode === "imagelist"  ) {
+                if (displayMode === "imagelist") {
                   return (
                     <ImageListView
                       key={movie.id}
@@ -334,7 +332,7 @@ class MovieListPages extends Component {
                       onCheckItem={this.onCheckItem}
                     />
                   );
-                } else if (displayMode === "thumblist"  ) {
+                } else if (displayMode === "thumblist") {
                   return (
                     <ThumbListView
                       key={movie.id}
@@ -363,7 +361,7 @@ class MovieListPages extends Component {
   }
 }
 const mapStateToProps = ({ movieData }) => {
-  const { items, isLoading, error, 
+  const { items, isLoading, error,
     totalPages, totalItemCount } = movieData;
   // console.log(items,isLoading)
   return { items, isLoading, error, totalPages, totalItemCount };
@@ -371,8 +369,8 @@ const mapStateToProps = ({ movieData }) => {
 
 export default connect(
   mapStateToProps, {
-    getListMovies,
-    addMovie, 
-    editMovie
+  getListMovies,
+  addMovie,
+  editMovie
 }
 )(MovieListPages);

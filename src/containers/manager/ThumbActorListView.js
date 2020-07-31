@@ -56,11 +56,11 @@ const ThumbActorListView = ({ actor, isSelect, collect, onCheckItem }) => {
           </NavLink>
           <div className="pl-2 d-flex flex-grow-1 min-width-zero">
             <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
-              <NavLink to={`?p=${actor.id}`} className="w-40 w-sm-100">
+              {/* <NavLink to={`?p=${actor.id}`} className="w-40 w-sm-100">
+              </NavLink> */}
                 <p className="list-item-heading mb-1 truncate">
                   {actor.name}
                 </p>
-              </NavLink>
               {/* <p className="mb-1 text-muted text-small w-10 w-sm-100">
                 {actor.view}
               </p> */}

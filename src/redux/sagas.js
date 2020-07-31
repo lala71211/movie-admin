@@ -5,6 +5,7 @@ import movieSaga from './movie/saga';
 import todoSaga from './todo/saga';
 import commentSaga from './comment/saga';
 import reviewSaga from './review/saga';
+import episodeSaga from './episode/saga';
 
 export default function* rootSaga(getState) {
   yield all([
@@ -14,5 +15,6 @@ export default function* rootSaga(getState) {
     todoSaga(),
     commentSaga(),
     reviewSaga(),
+    episodeSaga()
   ]);
 }

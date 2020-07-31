@@ -71,9 +71,8 @@ class DetailsPages extends Component {
         episodes: []
       },
       image: null,
-      commentForm: {
-
-      }
+      commentForm: {},
+     
     };
     // console.log(this.props)
   }
@@ -83,11 +82,12 @@ class DetailsPages extends Component {
     this.getImageUrl();
   }
 
+
   dataListRender() {
-    id = this.props.match.params.id;
+    id = parseInt(this.props.match.params.id);
     this.props.getMovieByID(id);
-    this.props.getListComments(6, 1, id, -1);
-    this.props.getListReviews(6, 1, id, -1);
+    this.props.getListComments(6, 0, id, -1);
+    this.props.getListReviews(6, 0, id, -1);
   }
   toggleTab(tab) {
     if (this.state.activeTab !== tab) {
@@ -130,11 +130,8 @@ class DetailsPages extends Component {
     }
   }
   render() {
-    // const { messages } = this.props.intl;
     const { image } = this.state;
-    // console.log(image)
     const { item, isLoading, comments, reviews } = this.props;
-    console.log(item)
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -327,7 +324,7 @@ class DetailsPages extends Component {
                   <NewComments className="mb-4" displayRate={false} comment={comments} />
                 </TabPane>
                 <TabPane tabId="4">
-                  <NewReviews className="mb-4" displayRate={true} movieId={item.id} />
+                  <NewReviews className="mb-4" displayRate={true} reviews={reviews} />
                 </TabPane>
               </TabContent>
             </Colxx>

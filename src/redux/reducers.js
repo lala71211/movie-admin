@@ -7,6 +7,7 @@ import movieData from './movie/reducer';
 import todoApp from './todo/reducer';
 import commentData from './comment/reducer';
 import reviewData from './review/reducer';
+import episodeData from './episode/reducer';
 
 const reducers = combineReducers({
   menu,
@@ -17,6 +18,7 @@ const reducers = combineReducers({
   todoApp,
   commentData,
   reviewData,
+  episodeData
 });
 
 export default reducers;

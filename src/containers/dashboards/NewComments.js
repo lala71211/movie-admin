@@ -5,11 +5,11 @@ import { NavLink } from "react-router-dom";
 
 import IntlMessages from "../../helpers/IntlMessages";
 
-import { comments } from "../../data/comments";
+// import { comments } from "../../data/comments";
 import Rating from "../../components/common/Rating";
 
 
-function NewComments({ className = "", displayRate = false, comment = []}) {
+function NewComments({ className = "", displayRate = false, comment = [] }) {
   // console.log(comment)
   return (
     <Card className={className}>
@@ -33,7 +33,7 @@ function NewComments({ className = "", displayRate = false, comment = []}) {
 
                   <div className="pl-3 pr-2">
                     <NavLink to="/app/manager/users/1">
-                      <p className="font-weight-medium mb-0">{item.username}
+                      <p className="font-weight-medium mb-0"> đăng lúc: {item.createAt} bởi {item.username}
                         {/* <i className="simple-icon-user" position="asolute-right"/> */}
                       </p>
                       <p className="text-muted mb-0 text-small">

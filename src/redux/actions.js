@@ -131,14 +131,33 @@ export const DELETE_COMMENT_QUESTION = "DELETE_COMMENT_QUESTION";
 //GET, DELETE REVIEW
 export const GET_REVIEW = "GET_REVIEW";
 export const ADD_REVIEW = "ADD_REVIEW";
-export const GET_REVIEW_SUCCESS = "GET_MOVIE_SUCCESS";
-export const GET_REVIEW_ERROR = "GET_MOVIE_ERROR";
+export const GET_REVIEW_SUCCESS = "GET_REVIEW_SUCCESS";
+export const GET_REVIEW_ERROR = "GET_REVIEW_ERROR";
 export const ADD_REVIEW_SUCCESS = "ADD_REVIEW_SUCCESS";
 export const ADD_REVIEW_ERROR = "ADD_REVIEW_ERROR";
 export const DELETE_REVIEW = "DELETE_REVIEW";
 export const DELETE_REVIEW_SUCCESS = "DELETE_REVIEW_SUCCESS";
 export const DELETE_REVIEW_ERROR = "DELETE_REVIEW_ERROR";
 export const DELETE_REVIEW_QUESTION = "DELETE_REVIEW_QUESTION";
+
+//GET,ADD, EDIT, DELETE EPISODE
+export const GET_EPISODE = "GET_EPISODE";
+export const GET_EPISODE_ID = "GET_EPISODE_ID";
+export const ADD_EPISODE = "ADD_EPISODE";
+export const EDIT_EPISODE = "EDIT_EPISODE";
+export const DELETE_EPISODE = "DELETE_EPISODE";
+export const GET_EPISODE_SUCCESS = "GET_EPISODE_SUCCESS";
+export const GET_EPISODE_ERROR = "GET_EPISODE_ERROR";
+export const GET_EPISODE_ID_SUCCESS = "GET_EPISODE_ID_SUCCESS";
+export const GET_EPISODE_ID_ERROR = "GET_EPISODE_ID_ERROR";
+export const ADD_EPISODE_SUCCESS = "ADD_EPISODE_SUCCESS";
+export const ADD_EPISODE_ERROR = "ADD_EPISODE_ERROR";
+export const EDIT_EPISODE_SUCCESS = "EDIT_EPISODE_SUCCESS";
+export const EDIT_EPISODE_ERROR = "EDIT_EPISODE_ERROR";
+export const DELETE_EPISODE_SUCCESS = "DELETE_EPISODE_SUCCESS";
+export const DELETE_EPISODE_ERROR = "DELETE_EPISODE_ERROR";
+export const DELETE_EPISODE_QUESTION = "DELETE_EPISODE_QUESTION";
+
 
 export * from "./menu/actions";
 export * from "./settings/actions";
@@ -149,4 +168,4 @@ export * from "./actor/actions";
 export * from "./movie/actions";
 export * from "./comment/actions";
 export * from "./review/actions";
-
+export * from "./episode/actions";
