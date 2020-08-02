@@ -48,3 +48,18 @@ export const editGenreError = (message) => ({
 type: EDIT_GENRE_ERROR,
 payload: message
 })
+
+export const deleteGenre = (id) => ({
+  type: DELETE_GENRE,
+  payload: id
+})
+
+export const deleteGenreSuccess = (message) => ({
+  type: DELETE_GENRE_SUCCESS,
+  payload: message
+})
+
+export const deleteGenreError = (message) => ({
+  type: DELETE_GENRE_ERROR,
+  payload: message
+})

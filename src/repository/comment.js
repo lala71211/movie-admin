@@ -14,4 +14,13 @@ export const queryListComments = async (selectedPageSize, currentPage, movieId, 
 export const deleteComment = async (id) => {
     return await axios
     .delete(`${apiComment}/${id}`)
-}       
+    .then(res => res.data)
+    .catch(err =>err.response)
+}
+
+export const deleteManyComments = async (listId) => {
+    return await axios
+    .delete(`${apiComment}/delete-many`,listId)
+    .then(res => res.data)
+    .catch(err =>err.response)
+}

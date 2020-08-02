@@ -1,7 +1,7 @@
 import { GET_REVIEW,ADD_REVIEW,DELETE_REVIEW,
     GET_REVIEW_SUCCESS,GET_REVIEW_ERROR,
     ADD_REVIEW_SUCCESS,ADD_REVIEW_ERROR,
-    DELETE_REVIEW_SUCCESS,DELETE_REVIEW_ERROR,DELETE_REVIEW_QUESTION} from "../actions";
+    DELETE_REVIEW_SUCCESS,DELETE_REVIEW_ERROR,DELETE_REVIEW_MANY} from "../actions";
 
 export const getListReviews = (selectedPageSize, currentPage, movieId, userId) => ({
 type: GET_REVIEW,
@@ -33,3 +33,22 @@ export const addReviewError = (message) => ({
     payload: message
 });
 
+export const deleteReview = (id) => ({
+    type: DELETE_REVIEW,
+    payload: id
+})
+
+export const deleteReviewSuccess = (message) => ({
+    type: DELETE_REVIEW_SUCCESS,
+    payload: message
+})
+
+export const deleteReviewError = (message) => ({
+    type: DELETE_REVIEW_ERROR,
+    payload: message
+})
+
+export const deleteReviewMany = (listId) => ({
+    type: DELETE_REVIEW_MANY,
+    payload: listId
+})

@@ -1,4 +1,4 @@
-import { all, call, fork, put, takeLatest,takeEvery } from 'redux-saga/effects';
+import { all, call, fork, put, takeLatest, takeEvery } from 'redux-saga/effects';
 
 import {
     GET_GENRE, ADD_GENRE, EDIT_GENRE, DELETE_GENRE,
@@ -11,9 +11,11 @@ import {
     addGenreError,
     editGenreSuccess,
     editGenreError,
+    deleteGenreSuccess,
+    deleteGenreError
 } from './actions';
 
-import { queryListGenres, addGenre, updateGenre } from '../../repository/genre';
+import { queryListGenres, addGenre, updateGenre, deleteGenre } from '../../repository/genre';
 
 export function* watchGetListGenre() {
     yield takeEvery(GET_GENRE, handleGetListGenre)
@@ -79,10 +81,32 @@ function* handleEditGenre({ payload }) {
     }
 }
 
+export function* watchDeleteGenre() {
+    yield takeLatest(DELETE_GENRE, handleDeleteGenre)
+}
+
+function* handleDeleteGenre({ payload }) {
+    const id = payload;
+    console.log(id)
+    try {
+        const deleted = yield call(deleteGenre, id);
+        console.log(deleted);
+        if (deleted.success === "OK") {
+            yield put(deleteGenreSuccess(deleted.message))
+        }
+        else {
+            yield put(deleteGenreError(deleted.message))
+        }
+    } catch (error) {
+        yield put(deleteGenreError(error))
+    }
+}
+
 export default function* rootSaga() {
     yield all([
         fork(watchGetListGenre),
         fork(watchAddGenre),
-        fork(watchEditGenre)
+        fork(watchEditGenre),
+        fork(watchDeleteGenre)
     ]);
 }

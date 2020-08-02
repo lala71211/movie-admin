@@ -7,9 +7,11 @@ import {
 import {
     getListCommentsSuccess,
     getListCommentError,
+    deleteCommentSuccess,
+    deleteCommentError,
 } from './actions';
 
-import { queryListComments,} from '../../repository/comment';
+import { queryListComments,deleteComment,deleteManyComments} from '../../repository/comment';
 
 export function* watchGetListComment() {
     yield takeLatest(GET_COMMENT, handleGetListComment)
@@ -35,8 +37,54 @@ function* handleGetListComment({ payload }) {
     }
 }
 
+export function* watchDeleteComment() {
+    yield takeLatest(DELETE_COMMENT, handleDeleteComment)
+}
+
+function* handleDeleteComment({ payload }) {
+    const id = payload;
+    console.log(id)
+    try {
+        const deleted = yield call(deleteComment, id);
+        console.log(deleted);
+        if (deleted.success === "OK") {
+            yield put(deleteCommentSuccess(deleted.message))
+        }
+        else {
+            yield put(deleteCommentError(deleted.message))
+        }
+    } catch (error) {
+        yield put(deleteCommentError(error))
+    }
+}
+
+
+export function* watchDeleteManyComments() {
+    yield takeLatest(DELETE_COMMENT, handleDeleteManyComments)
+}
+
+function* handleDeleteManyComments({ payload }) {
+    const listId = payload;
+    console.log(listId)
+    try {
+        const deleted = yield call(deleteManyComments, listId);
+        console.log(deleted);
+        if (deleted.success === "OK") {
+            yield put(deleteCommentSuccess(deleted.message))
+        }
+        else {
+            yield put(deleteCommentError(deleted.message))
+        }
+    } catch (error) {
+        yield put(deleteCommentError(error))
+    }
+}
+
+
 export default function* rootSaga() {
     yield all([
         fork(watchGetListComment),
+        fork(watchDeleteComment),
+        fork(watchDeleteManyComments)
     ]);
 }

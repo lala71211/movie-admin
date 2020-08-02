@@ -1,7 +1,7 @@
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 
 import {
-    GET_REVIEW, ADD_REVIEW, DELETE_REVIEW,
+    GET_REVIEW, ADD_REVIEW, DELETE_REVIEW, DELETE_REVIEW_MANY
 } from "../actions";
 
 import {
@@ -9,9 +9,11 @@ import {
     getListReviewError,
     addReviewSuccess,
     addReviewError,
+    deleteReviewSuccess,
+    deleteReviewError,
 } from './actions';
 
-import { queryListReviews, addReview } from '../../repository/review';
+import { queryListReviews, addReview, deleteReview, deleteManyReviews } from '../../repository/review';
 
 export function* watchGetListReview() {
     yield takeLatest(GET_REVIEW, handleGetListReview)
@@ -58,9 +60,54 @@ function* handleAddReview({ payload }) {
     }
 }
 
+export function* watchDeleteReview() {
+    yield takeLatest(DELETE_REVIEW, handleDeleteReview)
+}
+
+function* handleDeleteReview({ payload }) {
+    const id = payload;
+    console.log(id)
+    try {
+        const deleted = yield call(deleteReview, id);
+        console.log(deleted);
+        if (deleted.success === "OK") {
+            yield put(deleteReviewSuccess(deleted.message))
+        }
+        else {
+            yield put(deleteReviewError(deleted.message))
+        }
+    } catch (error) {
+        yield put(deleteReviewError(error))
+    }
+}
+
+
+export function* watchDeleteManyReviews() {
+    yield takeLatest(DELETE_REVIEW_MANY, handleDeleteManyReviews)
+}
+
+function* handleDeleteManyReviews({ payload }) {
+    const listId = payload;
+    console.log(listId)
+    try {
+        const deleted = yield call(deleteManyReviews, listId);
+        console.log(deleted);
+        if (deleted.success === "OK") {
+            yield put(deleteReviewSuccess(deleted.message))
+        }
+        else {
+            yield put(deleteReviewError(deleted.message))
+        }
+    } catch (error) {
+        yield put(deleteReviewError(error))
+    }
+}
+
 export default function* rootSaga() {
     yield all([
         fork(watchGetListReview),
         fork(watchAddReview),
+        fork(watchDeleteReview),
+        fork(watchDeleteManyReviews)
     ]);
 }

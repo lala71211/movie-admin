@@ -48,3 +48,18 @@ export const editActorError = (message) => ({
 type: EDIT_ACTOR_ERROR,
 payload: message
 })
+
+export const deleteActor = (id) => ({
+    type: DELETE_ACTOR,
+    payload: id
+})
+
+export const deleteActorSuccess = (message) => ({
+    type: DELETE_ACTOR_SUCCESS,
+    payload: message
+})
+
+export const deleteActorError = (message) => ({
+    type: DELETE_ACTOR_ERROR,
+    payload: message
+})

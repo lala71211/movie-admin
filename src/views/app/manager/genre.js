@@ -9,7 +9,7 @@ import EditGenreModal from "../../../containers/manager/EditGenreModal";
 import { NotificationManager } from "../../../components/common/react-notifications";
 
 import { connect } from "react-redux";
-import { getListGenres, addGenre, editGenre } from "../../../redux/genre/actions"
+import { getListGenres, addGenre, editGenre, deleteGenre } from "../../../redux/genre/actions"
 
 function collect(props) {
   return { data: props.data };
@@ -236,7 +236,12 @@ class GenrePage extends Component {
     setTimeout(() => { this.dataListRender() }, 100)
 
   }
-
+  deleteFlag = e => {
+    const { genreForm } = this.state;
+    let id = genreForm.id;
+    this.props.deleteGenre(id)
+    setTimeout(() => { this.dataListRender() }, 500)
+  }
   onContextMenuClick = (e, data, target) => {
 
     if (data.action === "edit") {
@@ -247,6 +252,7 @@ class GenrePage extends Component {
     }
     else if (data.action === "delete") {
       console.log("onContextMenuClick - action : ", data.action);
+      this.deleteFlag();
     }
 
   };
@@ -310,6 +316,7 @@ class GenrePage extends Component {
               pageSizes={pageSizes}
               toggleModal={this.toggleModal}
               toggleEditModal={this.toggleEditModal}
+              deleteFlag={this.deleteFlag}
             />
             <AddNewGenreModal
               modalOpen={addModalOpen}
@@ -359,5 +366,6 @@ export default connect(
     getListGenres,
     addGenre,
     editGenre,
+    deleteGenre
   }
 )(GenrePage);

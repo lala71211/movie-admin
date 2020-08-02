@@ -65,7 +65,8 @@ class ListPageHeading extends Component {
       pageSizes,
       toggleModal,
       toggleEditModal,
-      heading
+      heading,
+      deleteFlag
     } = this.props;
 
     const { displayOptionsIsOpen, dropdownSplitOpen } = this.state;
@@ -112,7 +113,7 @@ class ListPageHeading extends Component {
                   color="primary"
                   className="dropdown-toggle-split btn-lg" />
                 <DropdownMenu right>
-                  <DropdownItem>
+                  <DropdownItem onClick={() => deleteFlag()}>
                     <IntlMessages id="pages.delete"  />
                   </DropdownItem>
                   <DropdownItem onClick={() => toggleEditModal()}>

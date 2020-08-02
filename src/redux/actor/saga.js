@@ -11,9 +11,11 @@ import {
     addActorError,
     editActorSuccess,
     editActorError,
+    deleteActorSuccess,
+    deleteActorError
 } from './actions';
 
-import { queryListActors, addActor, updateActor } from '../../repository/actor';
+import { queryListActors, addActor, updateActor, deleteActor } from '../../repository/actor';
 
 export function* watchGetListActor() {
     yield takeLatest(GET_ACTOR, handleGetListActor)
@@ -82,10 +84,32 @@ function* handleEditActor({ payload }) {
     }
 }
 
+export function* watchDeleteActor() {
+    yield takeLatest(DELETE_ACTOR, handleDeleteActor)
+}
+
+function* handleDeleteActor({ payload }) {
+    const id = payload;
+    console.log(id)
+    try {
+        const deleted = yield call(deleteActor, id);
+        console.log(deleted);
+        if (deleted.success === "OK") {
+            yield put(deleteActorSuccess(deleted.message))
+        }
+        else {
+            yield put(deleteActorError(deleted.message))
+        }
+    } catch (error) {
+        yield put(deleteActorError(error))
+    }
+}
+
 export default function* rootSaga() {
     yield all([
         fork(watchGetListActor),
         fork(watchAddActor),
-        fork(watchEditActor)
+        fork(watchEditActor),
+        fork(watchDeleteActor),
     ]);
 }

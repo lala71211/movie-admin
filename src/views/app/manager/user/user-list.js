@@ -253,12 +253,14 @@ class UserListPages extends Component {
     }))
     // console.log(this.state.actorForm)
   }
+  
   deleteFlag = e => {
     const { userForm } = this.state;
     userForm.delete_flag = !userForm.delete_flag;
     this.props.editUser(userForm)
     setTimeout(() => { this.dataListRender() }, 500)
   }
+
   dataListRender() {
     const {
       selectedPageSize,

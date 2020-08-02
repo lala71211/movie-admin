@@ -30,8 +30,8 @@ import FormikEditMovie from "../../../../containers/form-validations/FormikEditM
 
 import { connect } from "react-redux";
 import { getMovieByID, addMovie, editMovie, deleteMovie } from "../../../../redux/movie/actions";
-import { getListComments } from "../../../../redux/comment/actions";
-import { getListReviews } from "../../../../redux/review/actions"
+import { getListComments, deleteComment } from "../../../../redux/comment/actions";
+import { getListReviews, deleteReview } from "../../../../redux/review/actions";
 import { FIREBASE_PATH, DEFAULT_IMAGE } from "../../../../constants/defaultValues";
 import { storage } from "../../../../helpers/Firebase";
 
@@ -80,15 +80,19 @@ class DetailsPages extends Component {
 
   componentDidMount() {
     this.dataListRender();
-    this.getImageUrl();
   }
-
+  componentDidUpdate(prevProps) {
+    if (prevProps.item.poster !== this.props.item.poster) {
+      this.getImageUrl();
+    }
+  }
 
   dataListRender() {
     id = parseInt(this.props.match.params.id);
     this.props.getMovieByID(id);
     this.props.getListComments(6, 0, id, -1);
     this.props.getListReviews(6, 0, id, -1);
+    // this.getImageUrl();
   }
   movieStatus() {
     let id = this.props.item.id;
@@ -102,8 +106,9 @@ class DetailsPages extends Component {
       });
     }
   }
-  async getImageUrl() {
-    let fileName = this.props.item.poster
+  getImageUrl() {
+    let fileName = this.props.item.poster;
+    console.log(fileName);
     if (fileName == null || fileName === '') {
       this.setState({ image: DEFAULT_IMAGE });
     } else {
@@ -135,6 +140,21 @@ class DetailsPages extends Component {
         });
     }
   }
+
+  deleteComment = e => {
+    console.log(e)
+    let id = e;
+    this.props.deleteComment(id);
+    setTimeout(() => { this.dataListRender() }, 100)
+  }
+
+  deleteReview = e => {
+    console.log(e)
+    let id = e;
+    this.props.deleteReview(id);
+    setTimeout(() => { this.dataListRender() }, 100)
+  }
+
   render() {
     const { image } = this.state;
     const { item, isLoading, comments, reviews, error } = this.props;
@@ -339,10 +359,10 @@ class DetailsPages extends Component {
                   <FormikEditMovie movie={item} />
                 </TabPane>
                 <TabPane tabId="3">
-                  <NewComments className="mb-4" displayRate={false} comment={comments} />
+                  <NewComments className="mb-4" displayRate={false} comment={comments} deleteFlag={this.deleteComment} />
                 </TabPane>
                 <TabPane tabId="4">
-                  <NewReviews className="mb-4" displayRate={true} reviews={reviews} />
+                  <NewReviews className="mb-4" displayRate={true} reviews={reviews} deleteFlag={this.deleteReview} />
                 </TabPane>
               </TabContent>
             </Colxx>
@@ -366,5 +386,7 @@ export default connect(
   deleteMovie,
   getListComments,
   getListReviews,
+  deleteComment,
+  deleteReview
 }
 )(DetailsPages);

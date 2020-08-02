@@ -13,7 +13,7 @@ import { NotificationManager } from "../../../../components/common/react-notific
 
 
 import { connect } from "react-redux";
-import { getListActors, addActor, editActor } from "../../../../redux/actor/actions"
+import { getListActors, addActor, editActor, deleteActor } from "../../../../redux/actor/actions"
 
 function collect(props) {
   return { data: props.data };
@@ -259,6 +259,13 @@ class Actor extends Component {
     // console.log(this.state.actorForm)
   }
 
+  deleteFlag = e => {
+    const { actorForm } = this.state;
+    let id = actorForm.id;
+    this.props.deleteActor(id)
+    setTimeout(() => { this.dataListRender() }, 500)
+  }
+
   handleImage = file => {
     // addedfile: (file) =>  console.log(file)
 
@@ -309,8 +316,11 @@ class Actor extends Component {
       // console.log("lỗi nè")
       this.createNotification("filled");
     }
-    else {
+    else if (data.action === "edit" && selectedItems.length === 1) {
       this.toggleEditModal();
+    }
+    if (data.action === "delete") {
+      this.deleteFlag();
     }
   };
 
@@ -380,6 +390,7 @@ class Actor extends Component {
               pageSizes={pageSizes}
               toggleModal={this.toggleModal}
               toggleEditModal={this.toggleEditModal}
+              deleteFlag={this.deleteFlag}
             />
             <AddNewModal
               modalOpen={modalOpen}
@@ -454,6 +465,7 @@ export default connect(
   mapStateToProps, {
   getListActors,
   addActor,
-  editActor
+  editActor,
+  deleteActor
 }
 )(Actor);

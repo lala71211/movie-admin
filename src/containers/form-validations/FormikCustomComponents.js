@@ -83,7 +83,7 @@ class FormikCustomComponents extends Component {
     formSubmit.append('title', payload.name);
     formSubmit.append('nation', payload.nation);
     formSubmit.append('adult', payload.adult);
-    console.log(JSON.stringify(payload.genres))
+    // console.log(JSON.stringify(payload.genres))
     formSubmit.append('genres', JSON.stringify(payload.genres));
     formSubmit.append('imdb', payload.imdb);
     formSubmit.append('language', payload.selectLanguage);

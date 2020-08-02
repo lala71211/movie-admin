@@ -2,7 +2,7 @@ import {
     GET_REVIEW, ADD_REVIEW, DELETE_REVIEW,
     GET_REVIEW_SUCCESS, GET_REVIEW_ERROR,
     ADD_REVIEW_SUCCESS, ADD_REVIEW_ERROR,
-    DELETE_REVIEW_SUCCESS, DELETE_REVIEW_ERROR, DELETE_REVIEW_QUESTION
+    DELETE_REVIEW_SUCCESS, DELETE_REVIEW_ERROR, DELETE_REVIEW_MANY
 } from "../actions";
 
 const INIT_STATE = {
@@ -11,7 +11,7 @@ const INIT_STATE = {
     error: '',
     totalElements: 0,
     totalPages: 1,
-    
+
 };
 
 export default (state = INIT_STATE, action) => {
@@ -35,6 +35,14 @@ export default (state = INIT_STATE, action) => {
             // console.log(action)
             return { ...state, isLoading: false, error: '' };
         case ADD_REVIEW_ERROR:
+            return { ...state, isLoading: false, error: action.payload.message }
+        case DELETE_REVIEW:
+            return { ...state, isLoading: false, error: '' }
+        case DELETE_REVIEW_MANY:
+            return { ...state, isLoading: false, error: '' }
+        case DELETE_REVIEW_SUCCESS:
+            return { ...state, isLoading: false, error: '' }
+        case DELETE_REVIEW_ERROR:
             return { ...state, isLoading: false, error: action.payload.message }
         default:
             return { ...state };
