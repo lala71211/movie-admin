@@ -158,6 +158,20 @@ export const DELETE_EPISODE_SUCCESS = "DELETE_EPISODE_SUCCESS";
 export const DELETE_EPISODE_ERROR = "DELETE_EPISODE_ERROR";
 export const DELETE_EPISODE_QUESTION = "DELETE_EPISODE_QUESTION";
 
+// GET, EDIT USER
+export const GET_USER = "GET_USER";
+export const GET_FAVORITE_LIST_BY_USER_ID = "GET_FAVORITE_LIST_BY_USER_ID";
+export const EDIT_USER = "EDIT_USER";
+export const GET_USER_SUCCESS = "GET_USER_SUCCESS";
+export const GET_USER_ERROR = "GET_USER_ERROR";
+export const GET_FAVORITE_LIST_BY_USER_ID_SUCCESS = "GET_FAVORITE_LIST_BY_USER_ID_SUCCESS";
+export const GET_FAVORITE_LIST_BY_USER_ID_ERROR = "GET_FAVORITE_LIST_BY_USER_ID_ERROR";
+export const EDIT_USER_SUCCESS = "EDIT_USER_SUCCESS";
+export const EDIT_USER_ERROR = "EDIT_USER_ERROR";
+export const DELETE_USER = "DELETE_USER";
+export const DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS";
+export const DELETE_USER_ERROR = "DELETE_USER_ERROR";
+export const DELETE_USER_QUESTION = "DELETE_USER_QUESTION";
 
 export * from "./menu/actions";
 export * from "./settings/actions";
@@ -169,3 +183,4 @@ export * from "./movie/actions";
 export * from "./comment/actions";
 export * from "./review/actions";
 export * from "./episode/actions";
+export * from "./user/actions";

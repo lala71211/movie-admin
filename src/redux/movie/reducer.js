@@ -14,8 +14,9 @@ const INIT_STATE = {
     error: '',
     totalPages: 1,
     totalItemCount: 0,
-    genreOptions:[],
-    item: {id: 0,
+    genreOptions: [],
+    item: {
+        id: 0,
         title: "",
         quality: "",
         imdb: 0,
@@ -30,16 +31,17 @@ const INIT_STATE = {
         adult: 0,
         visible: false,
         genres: [{
-          id: 0,
-          name: "",
+            id: 0,
+            name: "",
         },
         {
-          id: 1,
-          name: "",
+            id: 1,
+            name: "",
         },
         ],
         characters: [],
-        episodes: []},
+        episodes: []
+    },
 };
 
 export default (state = INIT_STATE, action) => {
@@ -58,7 +60,7 @@ export default (state = INIT_STATE, action) => {
             }
         case GET_MOVIE_ID:
             // console.log(action)
-            return { ...state, isLoading: true, error: '', item: {}, genreOptions:[] };
+            return { ...state, isLoading: true, error: '', item: {}, genreOptions: [] };
         case GET_MOVIE_ID_SUCCESS:
             // console.log(action)
             let temp = [];
@@ -66,11 +68,11 @@ export default (state = INIT_STATE, action) => {
                 temp.push({
                     id: genre.id,
                     value: genre.name,
-                    label: genre.name, 
+                    label: genre.name,
                 }))
             // console.log(temp)
             return {
-                ...state, isLoading: false, item: action.payload, genreOptions:temp, error: ''
+                ...state, isLoading: false, item: action.payload, genreOptions: temp, error: ''
             }
         case GET_MOVIE_ID_ERROR:
             // console.log(action)
@@ -91,7 +93,14 @@ export default (state = INIT_STATE, action) => {
             return { ...state, isLoading: false, error: '' }
         case EDIT_MOVIE_ERROR:
             return { ...state, isLoading: false, error: action.payload.message }
-
+        case DELETE_MOVIE:
+            console.log(action)
+            return { ...state, isLoading: false, error: '' }
+        case DELETE_MOVIE_SUCCESS:
+            console.log(action)
+            return { ...state, isLoading: false, error: '' };
+        case DELETE_MOVIE_ERROR:
+            return { ...state, isLoading: false, error: action.payload.message }
         default:
             return { ...state };
     }

@@ -23,3 +23,9 @@ export const updateActor = async (id,actorForm) => {
     .then(res =>res.data)
     .catch(error => error.response)
 }
+
+export const deleteActor = async (id) =>{
+    return await axios.delete(`${apiActor}/${id}`)
+    .then(res =>res.data)
+    .catch(error => error.response)
+}

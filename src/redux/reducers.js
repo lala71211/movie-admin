@@ -8,6 +8,7 @@ import todoApp from './todo/reducer';
 import commentData from './comment/reducer';
 import reviewData from './review/reducer';
 import episodeData from './episode/reducer';
+import userData from './user/reducer';
 
 const reducers = combineReducers({
   menu,
@@ -18,7 +19,8 @@ const reducers = combineReducers({
   todoApp,
   commentData,
   reviewData,
-  episodeData
+  episodeData,
+  userData
 });
 
 export default reducers;

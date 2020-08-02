@@ -6,6 +6,7 @@ import todoSaga from './todo/saga';
 import commentSaga from './comment/saga';
 import reviewSaga from './review/saga';
 import episodeSaga from './episode/saga';
+import userSaga from './user/saga';
 
 export default function* rootSaga(getState) {
   yield all([
@@ -15,6 +16,7 @@ export default function* rootSaga(getState) {
     todoSaga(),
     commentSaga(),
     reviewSaga(),
-    episodeSaga()
+    episodeSaga(),
+    userSaga()
   ]);
 }

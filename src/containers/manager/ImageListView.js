@@ -85,6 +85,16 @@ const ImageActorListView = ({ movie, isSelect, collect, onCheckItem }) => {
                 <CardText className="text-muted text-small mb-0 font-weight-light">
                   {movie.release_date}
                 </CardText>
+                <div className="w-40 w-sm-100">
+                  {
+                    movie.genres.map(genre => {
+                      return (
+                        <CardText className="text-muted text-small mb-0 font-weight-light">
+                          {genre.name}
+                        </CardText>)
+                    })
+                  }
+                </div>
               </Colxx>
             </Row>
           </CardBody>

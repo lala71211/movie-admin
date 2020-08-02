@@ -322,6 +322,7 @@ class MovieListPages extends Component {
             />
             <Row>
               {items.map(movie => {
+
                 if (displayMode === "imagelist") {
                   return (
                     <ImageListView
@@ -342,7 +343,8 @@ class MovieListPages extends Component {
                       onCheckItem={this.onCheckItem}
                     />
                   );
-                } else
+                }
+                else
                   return null;
               })}
               <Pagination

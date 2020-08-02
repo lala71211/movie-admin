@@ -13,6 +13,11 @@ import DropzoneExample from "../forms/DropzoneExample";
 import SingleReactSelect from "../forms/SingleReactSelect";
 
 const AddNewActorModal = ({ modalOpen, toggleModal, handleChange, handleSubmit, handleChangeSelect, actor, handleImage }) => {
+  const selectData = [
+    { label: "Trung Quốc", value: "tq", key: 0 },
+    { label: "Việt Nam", value: "vn", key: 1 },
+    { label: "Mỹ", value: "usa", key: 2 }
+  ];
   return (
     <Modal
       isOpen={modalOpen}
@@ -27,10 +32,10 @@ const AddNewActorModal = ({ modalOpen, toggleModal, handleChange, handleSubmit, 
           <IntlMessages id="forms.actor-name" />
         </Label>
         <Input name="name" onChange={handleChange} value={actor.name} />
-        <Label>
+        <Label style={{ marginTop:"10px" }}>
           <IntlMessages id="forms.actor-nation" />
         </Label>
-        <SingleReactSelect handleChangeSelect={handleChangeSelect} selectedOption={actor.nation}/>
+        <SingleReactSelect handleChangeSelect={handleChangeSelect} selectedOption={actor.nation} options={selectData} isMulti={false}/>
         <Label>
           <IntlMessages id="forms.actor-avatar" />
         </Label>

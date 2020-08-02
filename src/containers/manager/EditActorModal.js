@@ -16,6 +16,11 @@ import { storage } from "../../helpers/Firebase";
 
 const EditActorModal = ({ modalOpen, toggleEditModal, handleChange, handleSubmit, handleChangeSelect, actor,handleImage }) => {
 // console.log(actor)
+const selectData = [
+  { label: "Trung Quốc", value: "tq", key: 0 },
+  { label: "Việt Nam", value: "vn", key: 1 },
+  { label: "Mỹ", value: "usa", key: 2 }
+];
 const [imgUrl, setImgUrl] = useState("http://via.placeholder.com/92x136")
   useEffect(() => {
     if (actor.image != null) {
@@ -68,10 +73,10 @@ const [imgUrl, setImgUrl] = useState("http://via.placeholder.com/92x136")
           <IntlMessages id="forms.actor-name" />
         </Label>
         <Input name="name" onChange={handleChange} value={actor.name} style={{ marginBottom:"15px"}}/>
-        <Label>
+        <Label style={{ marginTop:"10px" }}>
           <IntlMessages id="forms.actor-nation" />
         </Label>
-        <SingleReactSelect handleChangeSelect={handleChangeSelect} selectedOption={actor.nation}/>
+        <SingleReactSelect handleChangeSelect={handleChangeSelect} selectedOption={actor.nation} options={selectData} isMulti={false}/>
         <Label>
           <IntlMessages id="forms.actor-avatar" />
         </Label>

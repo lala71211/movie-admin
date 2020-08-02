@@ -1,20 +1,20 @@
 import React, { Component, Fragment } from "react";
 import { Row } from "reactstrap";
-import axios from "axios";
-
-import { serverPath } from "../../../../constants/defaultValues";
 
 import Pagination from "../../../../containers/manager/Pagination";
 import ContextMenuContainer from "../../../../containers/manager/ContextMenuContainer";
-import ListPageHeading from "../../../../containers/manager/ListPageHeading";
-import ImageListView from "../../../../containers/manager/ImageListView";
-import ThumbListView from "../../../../containers/manager/ThumbListView";
-import AddNewModal from "../../../../containers/manager/AddNewModal";
+import ListPageHeading from "../../../../containers/manager/ListUserPageHeading";
+import ImageListView from "../../../../containers/manager/ImageUserListView";
+import ThumbListView from "../../../../containers/manager/ThumbUserListView";
+import FavoriteModal from "../../../../containers/manager/FavoriteModal";
+import EditUserRoleModal from "../../../../containers/manager/EditUserRoleModal";
+import { connect } from "react-redux";
+import { getListUsers, getFavoriteListByUserID, editUser } from "../../../../redux/user/actions";
 
 function collect(props) {
   return { data: props.data };
 }
-const apiUrl = serverPath + "/api/movie/";
+
 
 class UserListPages extends Component {
 
@@ -23,14 +23,12 @@ class UserListPages extends Component {
     this.mouseTrap = require('mousetrap');
 
     this.state = {
-      displayMode: "imagelist",
+      displayMode: "thumblist",
 
       selectedPageSize: 8,
       orderOptions: [
-        { column: "title", label: "Tên Phim" },
-        { column: "genre", label: "Thể loại" },
-        { column: "view", label: "Lượt xem" },
-        { column: "release_date", label: "Công chiếu" },
+        { column: "id,asc", label: "Tăng dần" },
+        { column: "id,desc", label: "Giảm dần" },
       ],
       pageSizes: [8, 12, 24],
 
@@ -41,16 +39,36 @@ class UserListPages extends Component {
         { label: "Desserts", value: "Desserts", key: 2 }
       ],
 
-      selectedOrderOption: { column: "title", label: "Tên phim" },
+      selectedOrderOption: { column: "id,asc", label: "Tăng dần" },
       dropdownSplitOpen: false,
       modalOpen: false,
+      modalEditOpen: false,
       currentPage: 1,
       totalItemCount: 0,
       totalPage: 1,
       search: "",
       selectedItems: [],
       lastChecked: null,
-      isLoading: false
+      isLoading: false,
+      userForm: {
+        id: 0,
+        email: "",
+        name: "",
+        username: "",
+        provider: "",
+        image_url: null,
+        delete_flag: false,
+        roles: [{
+          id: 0,
+          name: "",
+        },
+        {
+          id: 1,
+          name: "",
+        },
+        ],
+      },
+      selectUserId: 0
     };
   }
 
@@ -75,10 +93,17 @@ class UserListPages extends Component {
   }
 
   toggleModal = () => {
+
     this.setState({
       modalOpen: !this.state.modalOpen
     });
   };
+
+  toggleEditModal = () => {
+    this.setState({
+      modalEditOpen: !this.state.modalEditOpen
+    });
+  }
 
   changeOrderBy = column => {
     this.setState(
@@ -141,18 +166,31 @@ class UserListPages extends Component {
       });
     }
 
-    let selectedItems = this.state.selectedItems;
+    let { selectedItems, userForm } = this.state;
+    let { items } = this.props;
+
     if (selectedItems.includes(id)) {
       selectedItems = selectedItems.filter(x => x !== id);
     } else {
       selectedItems.push(id);
     }
+
+    let selectUser = items.filter(x => x.id === id);
+    userForm.id = selectUser[0].id;
+    userForm.email = selectUser[0].email;
+    userForm.name = selectUser[0].name;
+    userForm.username = selectUser[0].username;
+    userForm.provider = selectUser[0].provider;
+    userForm.image_url = selectUser[0].image_url;
+    userForm.delete_flag = selectUser[0].delete_flag;
+    userForm.roles = selectUser[0].roles;
+
     this.setState({
-      selectedItems
+      selectedItems,
+      selectUserId: selectUser[0].id
     });
 
     if (event.shiftKey) {
-      var items = this.state.items;
       var start = this.getIndex(id, items, "id");
       var end = this.getIndex(this.state.lastChecked, items, "id");
       items = items.slice(Math.min(start, end), Math.max(start, end) + 1);
@@ -166,6 +204,7 @@ class UserListPages extends Component {
         selectedItems
       });
     }
+    this.props.getFavoriteListByUserID(selectUser[0].id)
     document.activeElement.blur();
   };
 
@@ -194,6 +233,32 @@ class UserListPages extends Component {
     return false;
   };
 
+  handleEditSubmit = e => {
+    const { userForm } = this.state;
+    let roles = [];
+    userForm.roles.map(item => roles.push({
+      id: item.key,
+      name: item.value
+    }))
+    userForm.roles = roles;
+    this.props.editUser(userForm)
+    setTimeout(() => { this.toggleEditModal() }, 500)
+    setTimeout(() => { this.dataListRender() }, 500)
+  }
+
+  handleChangeSelect = (e) => {
+    const { name, value } = e.target;
+    this.setState(prevState => ({
+      userForm: { ...prevState.userForm, [name]: value }
+    }))
+    // console.log(this.state.actorForm)
+  }
+  deleteFlag = e => {
+    const { userForm } = this.state;
+    userForm.delete_flag = !userForm.delete_flag;
+    this.props.editUser(userForm)
+    setTimeout(() => { this.dataListRender() }, 500)
+  }
   dataListRender() {
     const {
       selectedPageSize,
@@ -201,24 +266,13 @@ class UserListPages extends Component {
       selectedOrderOption,
       search
     } = this.state;
-    axios
-      .get(
-        `${apiUrl}?pageSize=${selectedPageSize}&currentPage=${currentPage}&orderBy=${
-        selectedOrderOption.column
-        }&search=${search}`
-      )
-      .then(res => {
-        return res.data;
-      })
-      .then(data => {
-        this.setState({
-          totalPage: data.totalPages,
-          items: data.content,
-          selectedItems: [],
-          totalItemCount: data.totalElements,
-          isLoading: true
-        });
-      });
+    this.setState({
+      selectedItems: [],
+    });
+    this.props.getListUsers(selectedPageSize,
+      currentPage,
+      selectedOrderOption,
+      search)
   }
 
   onContextMenuClick = (e, data, target) => {
@@ -227,6 +281,18 @@ class UserListPages extends Component {
       this.state.selectedItems
     );
     console.log("onContextMenuClick - action : ", data.action);
+    let selectedItems = this.state.selectedItems;
+    if (data.action === "edit" && selectedItems.length > 1) {
+      console.log("lỗi nè")
+      // this.createNotification("filled");
+    }
+    else if (data.action === "edit" && selectedItems.length === 1) {
+      // console.log("abc")
+      this.toggleEditModal();
+    }
+    if (data.action === "delete") {
+      this.deleteFlag();
+    }
   };
 
   onContextMenu = (e, data) => {
@@ -243,28 +309,28 @@ class UserListPages extends Component {
   render() {
     const {
       currentPage,
-      items,
       displayMode,
       selectedPageSize,
-      totalItemCount,
       selectedOrderOption,
       selectedItems,
       orderOptions,
       pageSizes,
+      userForm,
       modalOpen,
-      categories
+      modalEditOpen
     } = this.state;
-    const { match } = this.props;
+    const { match, totalItemCount, items, isLoading, totalPages, favorite } = this.props;
+
     const startIndex = (currentPage - 1) * selectedPageSize;
     const endIndex = currentPage * selectedPageSize;
 
-    return !this.state.isLoading ? (
+    return isLoading ? (
       <div className="loading" />
     ) : (
         <Fragment>
           <div className="disable-text-selection">
             <ListPageHeading
-              heading="menu.movie-list"
+              heading="menu.user-list"
               displayMode={displayMode}
               changeDisplayMode={this.changeDisplayMode}
               handleChangeSelectAll={this.handleChangeSelectAll}
@@ -282,40 +348,52 @@ class UserListPages extends Component {
               orderOptions={orderOptions}
               pageSizes={pageSizes}
               toggleModal={this.toggleModal}
+              toggleEditModal={this.toggleEditModal}
+              deleteFlag={this.deleteFlag}
             />
-            <AddNewModal
+            <FavoriteModal
               modalOpen={modalOpen}
               toggleModal={this.toggleModal}
-              categories={categories}
+              user={userForm}
+              favorite={favorite}
+            />
+            <EditUserRoleModal
+              modalOpen={modalEditOpen}
+              toggleEditModal={this.toggleEditModal}
+              user={userForm}
+              handleSubmit={this.handleEditSubmit}
+              handleChangeSelect={this.handleChangeSelect}
             />
             <Row>
-              {this.state.items.map(movie => {
-                if (this.state.displayMode === "imagelist") {
+              {items.map(user => {
+
+                if (displayMode === "imagelist") {
                   return (
                     <ImageListView
-                      key={movie.id}
-                      movie={movie}
-                      isSelect={this.state.selectedItems.includes(movie.id)}
+                      key={user.id}
+                      user={user}
+                      isSelect={selectedItems.includes(user.id)}
                       collect={collect}
                       onCheckItem={this.onCheckItem}
                     />
                   );
-                } else if (this.state.displayMode === "thumblist") {
+                } else if (displayMode === "thumblist") {
                   return (
                     <ThumbListView
-                      key={movie.id}
-                      movie={movie}
-                      isSelect={this.state.selectedItems.includes(movie.id)}
+                      key={user.id}
+                      user={user}
+                      isSelect={selectedItems.includes(user.id)}
                       collect={collect}
                       onCheckItem={this.onCheckItem}
                     />
                   );
-                } else
+                }
+                else
                   return null;
               })}
               <Pagination
-                currentPage={this.state.currentPage}
-                totalPage={this.state.totalPage}
+                currentPage={currentPage}
+                totalPage={totalPages}
                 onChangePage={i => this.onChangePage(i)}
               />
               <ContextMenuContainer
@@ -328,4 +406,17 @@ class UserListPages extends Component {
       );
   }
 }
-export default UserListPages;
+const mapStateToProps = ({ userData }) => {
+  const { items, isLoading, error,
+    totalPages, totalItemCount, favorite } = userData;
+  // console.log(items,isLoading)
+  return { items, isLoading, error, totalPages, totalItemCount, favorite };
+};
+
+export default connect(
+  mapStateToProps, {
+  getListUsers,
+  editUser,
+  getFavoriteListByUserID
+}
+)(UserListPages);

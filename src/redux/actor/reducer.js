@@ -34,7 +34,7 @@ export default (state = INIT_STATE, action) =>{
         case EDIT_ACTOR:
             return { ...state, isLoading: false,error:''}
         case EDIT_ACTOR_SUCCESS:
-            // console.log(action)
+            console.log(action)
             return { ...state, isLoading: false,error:''}
         case EDIT_ACTOR_ERROR:
             return { ...state, isLoading: false,error:action.payload.message}

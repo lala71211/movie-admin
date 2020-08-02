@@ -21,7 +21,7 @@ import Breadcrumb from "../../../../containers/navs/Breadcrumb";
 import { Colxx } from "../../../../components/common/CustomBootstrap";
 import IntlMessages from "../../../../helpers/IntlMessages";
 
-import { injectIntl } from "react-intl";
+// import { injectIntl } from "react-intl";
 import SmallLineCharts from "../../../../containers/dashboards/SmallLineCharts";
 import WebsiteVisitsChartCard from "../../../../containers/dashboards/WebsiteVisitsChartCard";
 import NewComments from "../../../../containers/dashboards/NewComments";
@@ -29,7 +29,7 @@ import NewReviews from "../../../../containers/dashboards/NewReview";
 import FormikEditMovie from "../../../../containers/form-validations/FormikEditMovie";
 
 import { connect } from "react-redux";
-import { getMovieByID, addMovie, editMovie, } from "../../../../redux/movie/actions";
+import { getMovieByID, addMovie, editMovie, deleteMovie } from "../../../../redux/movie/actions";
 import { getListComments } from "../../../../redux/comment/actions";
 import { getListReviews } from "../../../../redux/review/actions"
 import { FIREBASE_PATH, DEFAULT_IMAGE } from "../../../../constants/defaultValues";
@@ -41,6 +41,7 @@ class DetailsPages extends Component {
     super(props);
 
     this.toggleTab = this.toggleTab.bind(this);
+    this.movieStatus = this.movieStatus.bind(this);
     this.state = {
       activeFirstTab: "1",
       movieForm: {
@@ -72,7 +73,7 @@ class DetailsPages extends Component {
       },
       image: null,
       commentForm: {},
-     
+
     };
     // console.log(this.props)
   }
@@ -88,6 +89,11 @@ class DetailsPages extends Component {
     this.props.getMovieByID(id);
     this.props.getListComments(6, 0, id, -1);
     this.props.getListReviews(6, 0, id, -1);
+  }
+  movieStatus() {
+    let id = this.props.item.id;
+    let status = this.props.item.visible;
+    this.props.deleteMovie(id, !status)
   }
   toggleTab(tab) {
     if (this.state.activeTab !== tab) {
@@ -131,7 +137,10 @@ class DetailsPages extends Component {
   }
   render() {
     const { image } = this.state;
-    const { item, isLoading, comments, reviews } = this.props;
+    const { item, isLoading, comments, reviews, error } = this.props;
+    if (error !== "") {
+      console.log(error);
+    }
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -147,8 +156,9 @@ class DetailsPages extends Component {
                     size="lg"
                     outline
                     className="top-right-button top-right-button-single"
+                    onClick={() => this.movieStatus()}
                   >
-                    <IntlMessages id="pages.delete" />
+                    <IntlMessages id="pages.change-status" />
                   </Button>
                   {/*                
                   <DropdownItem header>
@@ -279,7 +289,7 @@ class DetailsPages extends Component {
                                 )
                               })}  */}
                               {item.genres === undefined ? (
-                                ""
+                                null
                               ) : (item.genres.map(x => {
                                 return (
                                   <Badge color="outline-secondary mb-1 mr-1" pill>
@@ -306,6 +316,14 @@ class DetailsPages extends Component {
                             <IntlMessages id="pages.adult" />
                           </p>
                           <p>{item.adult}</p>
+                          <p className="text-muted text-small mb-2">
+                            <IntlMessages id="pages.visible" />
+                          </p>
+                          {item.visible === true ? (
+                            <p>True</p>
+                          ) : (
+                              <p>False</p>)
+                          }
                         </CardBody>
                       </Card>
                     </Colxx>
@@ -345,6 +363,7 @@ export default connect(
   getMovieByID,
   addMovie,
   editMovie,
+  deleteMovie,
   getListComments,
   getListReviews,
 }

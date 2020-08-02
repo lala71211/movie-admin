@@ -268,16 +268,13 @@ class Actor extends Component {
 
   handleAddSubmit = e => {
     const { actorForm, image } = this.state;
-    // console.log("submit"form
+    console.log("submit")
     const formSubmit = new FormData();
     formSubmit.append('id', 0);
     formSubmit.append('name', actorForm.name);
     formSubmit.append('nation', actorForm.nation.label);
     if (image !== undefined) {
       formSubmit.append('image', image);
-    }
-    else{
-      formSubmit.append('image', null);
     }
 
     this.props.addActor(formSubmit)
@@ -296,10 +293,6 @@ class Actor extends Component {
     if (image !== undefined) {
       formSubmit.append('image', image);
     }
-    else{
-      formSubmit.append('image', null);
-    }
-
     this.props.editActor(actorForm.id, formSubmit)
     setTimeout(() => { this.toggleEditModal() }, 500)
     setTimeout(() => { this.dataListRender() }, 500)
@@ -361,7 +354,7 @@ class Actor extends Component {
     const { match, totalItemCount, items, isLoading, totalPages } = this.props;
     const startIndex = (currentPage - 1) * selectedPageSize;
     const endIndex = currentPage * selectedPageSize;
-
+    // console.log(items)
     return isLoading ? (
       <div className="loading" />
     ) : (
@@ -404,8 +397,8 @@ class Actor extends Component {
               actor={actorForm}
               handleChange={this.handleChangeInput}
               handleSubmit={this.handleEditSubmit}
-              handleImage={dropzoneconfig}
               handleChangeSelect={this.handleChangeSelect}
+              handleImage={dropzoneconfig}
             />
             {/* <NotificationExamples /> */}
             <Row>

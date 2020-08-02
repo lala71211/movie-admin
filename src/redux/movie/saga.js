@@ -14,10 +14,11 @@ import {
     addMovieError,
     editMovieSuccess,
     editMovieError,
-  
+    deleteMovieSuccess,
+    deleteMovieError,
 } from './actions';
 
-import { queryListMovies, queryMovieByID, addMovie, updateMovie } from '../../repository/movie';
+import { queryListMovies, queryMovieByID, addMovie, updateMovie, changeStatusMovie } from '../../repository/movie';
 
 export function* watchGetListMovie() {
     yield takeLatest(GET_MOVIE, handleGetListMovie)
@@ -105,11 +106,35 @@ function* handleEditMovie({ payload }) {
     }
 }
 
+export function* watchDeleteMovie() {
+    yield takeLatest(DELETE_MOVIE, handleDeleteMovie)
+}
+
+function* handleDeleteMovie({ payload }) {
+    const id = payload.id;
+    const status = payload.status;
+    console.log(payload)
+    try {
+        const deleteMovie = yield call(changeStatusMovie, id, status);
+        console.log(deleteMovie);
+        if (deleteMovie.success === "OK") {
+            yield put(deleteMovieSuccess(deleteMovie.message))
+        }
+        else {
+            yield put(deleteMovieError(deleteMovie.message))
+        }
+    } catch (error) {
+        yield put(deleteMovieError(error))
+    }
+}
+
+
 export default function* rootSaga() {
     yield all([
         fork(watchGetListMovie),
         fork(watchAddMovie),
         fork(watchEditMovie),
         fork(watchGetMovieByID),
+        fork(watchDeleteMovie)
     ]);
 }

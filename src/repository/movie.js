@@ -32,3 +32,9 @@ export const updateMovie = async (id, movieForm) => {
         .then(res => res.data)
         .catch(error => error.response)
 }
+
+export const changeStatusMovie = async (id, status) => {
+    return await axios.get(`${apiMovie}/${id}/status/${status}`)
+    .then(res => res.data)
+    .catch(error => error.response)
+}

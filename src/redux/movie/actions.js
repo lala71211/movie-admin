@@ -68,3 +68,17 @@ export const editMovieError = (message) => ({
     payload: message
 });
 
+export const deleteMovie = (id,status) => ({
+    type: DELETE_MOVIE,
+    payload: { id, status }
+});
+
+export const deleteMovieSuccess = (message) => ({
+    type: DELETE_MOVIE_SUCCESS,
+    payload: message
+});
+
+export const deleteMovieError = (message) => ({
+    type: DELETE_MOVIE_ERROR,
+    payload: message
+})

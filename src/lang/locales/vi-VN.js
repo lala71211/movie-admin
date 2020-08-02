@@ -58,6 +58,7 @@ module.exports = {
     /* 03.Menu */
     "menu.app": "Home",
     "menu.dashboards": "Dashboards",
+    "menu.user-list": "Danh sách người dùng",
     "menu.new-movie": "Thêm phim",
     "menu.default": "Default",
     "menu.analytics": "Thống kê",
@@ -207,6 +208,9 @@ module.exports = {
 
     /* 05.Pages */
     "pages.add-new": "ADD NEW",
+    "pages.visible": "Visible",
+    "pages.change-status":"Change Status",
+    "pages.favorite": "Favorite",
     "pages.add-new-modal-title": "Add New Item",
     "pages.display-options": "Display Options",
     "pages.orderby": "Order By : ",
@@ -468,6 +472,9 @@ module.exports = {
 
     /* 07.10.Forms */
     "forms.basic": "Basic",
+    "forms.edit-user-title": "Sửa người dùng",
+    "forms.user-name":"Tên người dùng",
+    "forms.user-role":"Quyền người dùng",
     "forms.add-new-actor-title":"Thêm diễn viên",
     "forms.edit-actor-title":"Sửa diễn viên",
     "forms.actor-name":"Tên diễn viên",
@@ -653,6 +660,7 @@ module.exports = {
 
     /* 07.20.Tables */
     "table.bootstrap-tables": "Bootstrap Tables",
+    "table.favorite": "Danh sách phim yêu thích",
     "table.bootstrap-basic": "Basic Table",
     "table.bootstrap-striped": "Striped Rows",
     "table.bootstrap-bordered": "Bordered Table",

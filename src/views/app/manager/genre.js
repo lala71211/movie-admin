@@ -9,7 +9,7 @@ import EditGenreModal from "../../../containers/manager/EditGenreModal";
 import { NotificationManager } from "../../../components/common/react-notifications";
 
 import { connect } from "react-redux";
-import {getListGenres, addGenre, editGenre } from "../../../redux/genre/actions"
+import { getListGenres, addGenre, editGenre } from "../../../redux/genre/actions"
 
 function collect(props) {
   return { data: props.data };
@@ -65,14 +65,13 @@ class GenrePage extends Component {
       });
       return false;
     });
-    
+
   }
-  componentDidUpdate(previousProps)
-  {
+  componentDidUpdate(previousProps) {
     if (previousProps.data !== this.props.data) {
-    this.dataListRender();
+      this.dataListRender();
     }
-    
+
   }
   componentWillUnmount() {
     this.mouseTrap.unbind("ctrl+a");
@@ -141,22 +140,22 @@ class GenrePage extends Component {
       });
     }
 
-    let {selectedItems,genreForm} = this.state;
-    let {genres} = this.props;
+    let { selectedItems, genreForm } = this.state;
+    let { genres } = this.props;
     if (selectedItems.includes(id)) {
       selectedItems = selectedItems.filter(x => x !== id);
     } else {
       selectedItems.push(id);
     }
     let selectGenre = genres.filter(x => x.id === id);
-    genreForm.id =  selectGenre[0].id;
+    genreForm.id = selectGenre[0].id;
     genreForm.name = selectGenre[0].name;
     this.setState({
       selectedItems, genreForm
     });
-    
+
     if (event.shiftKey) {
-  
+
       var start = this.getIndex(id, genres, "id");
       var end = this.getIndex(this.state.lastChecked, genres, "id");
       genres = genres.slice(Math.min(start, end), Math.max(start, end) + 1);
@@ -199,11 +198,11 @@ class GenrePage extends Component {
   };
 
   dataListRender() {
-    const {selectedOrderOption,search} = this.state;
+    const { selectedOrderOption, search } = this.state;
     this.setState({
       selectedItems: []
     });
-    this.props.getListGenres(selectedOrderOption,search)
+    this.props.getListGenres(selectedOrderOption, search)
     console.log("Render")
   }
 
@@ -221,34 +220,21 @@ class GenrePage extends Component {
 
   handleAddSubmit = e => {
     const { genreForm } = this.state;
+   
     this.props.addGenre(genreForm)
-    // this.toggleModal();
-    // this.dataListRender();
-    setTimeout(() => { this.toggleModal()},100)
-    setTimeout(() => { this.dataListRender()},100)
-    // axios
-    //   .post(`${apiUrl}/`, genreForm)
-    //   .then(res => {
-    //     this.toggleModal();
-    //     this.dataListRender();
-    //   })
-    //   .catch(error => console.log(error.response))
+
+    setTimeout(() => { this.toggleModal() }, 100)
+    setTimeout(() => { this.dataListRender() }, 100)
+
   }
 
   handleEditSubmit = e => {
     const { genreForm } = this.state;
     this.props.editGenre(genreForm)
-    // this.toggleEditModal();
-    // this.dataListRender();
-    setTimeout(() => { this.toggleEditModal()},100)
-    setTimeout(() => { this.dataListRender()},100)
-    // axios
-    //   .put(`${apiUrl}/${genreForm.id}`, genreForm)
-    //   .then(res => {
-    //     this.toggleEditModal();
-    //     this.dataListRender();
-    //   })
-    //   .catch(error => console.log(error.response))
+    
+    setTimeout(() => { this.toggleEditModal() }, 100)
+    setTimeout(() => { this.dataListRender() }, 100)
+
   }
 
   onContextMenuClick = (e, data, target) => {
@@ -262,7 +248,7 @@ class GenrePage extends Component {
     else if (data.action === "delete") {
       console.log("onContextMenuClick - action : ", data.action);
     }
-    
+
   };
 
   onContextMenu = (e, data) => {
@@ -299,8 +285,8 @@ class GenrePage extends Component {
       editModalOpen,
       genreForm
     } = this.state;
-    
-    const { match,genres,isLoading} = this.props;
+
+    const { match, genres, isLoading } = this.props;
 
     return isLoading ? (
       <div className="loading" />

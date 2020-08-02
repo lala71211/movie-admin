@@ -13,7 +13,7 @@ import DropzoneExample from "../forms/DropzoneExample";
 // import MultiDropzone from "../forms/MultiDropzone";
 import { connect } from "react-redux";
 import { getListGenres } from "../../redux/genre/actions"
-import {editMovie} from "../../redux/movie/actions"
+import { editMovie } from "../../redux/movie/actions"
 import moment from 'moment'
 
 const SignupSchema = Yup.object().shape({
@@ -22,14 +22,14 @@ const SignupSchema = Yup.object().shape({
   selectQuality: Yup.string().required("Chọn chất lượng"),
   selectLanguage: Yup.string().required("Chọn ngôn ngữ"),
   imdb: Yup.number()
-    .min(0, "Lớn hơn 0")
+    .min(0, "Lớn hơn hoặc bằng 0")
     .max(10, "Nhỏ hơn 10")
     .required("Nhập giá trị"),
   runtime: Yup.number()
-    .min(0, "Lớn hơn 0")
+    .min(0, "Lớn hơn hoặc bằng 0")
     .required("Nhập giá trị"),
   view: Yup.number()
-    .min(0, "Lớn hơn 0")
+    .min(0, "Lớn hơn hoặc bằng 0")
     .required("Nhập giá trị"),
   genres: Yup.array()
     .min(1, "Chọn ít nhất 1 thể loại")
@@ -42,6 +42,7 @@ const SignupSchema = Yup.object().shape({
   nation: Yup.string()
     .required("Nhập tên quốc gia"),
   adult: Yup.number()
+    .min(0, "Lớn hơn hoặc bằng 0")
     .required("Nhập giá trị"),
   date: Yup.date()
     .nullable()
@@ -66,8 +67,8 @@ class FormikEditMovie extends Component {
   handleSubmit = (values, { setSubmitting }) => {
     let temp = [];
     let movieId = this.props.movie.id;
-    let {image} = this.state;
-    values.genres.map(t => 
+    let { image } = this.state;
+    values.genres.map(t =>
       temp.push({
         name: t.value,
         id: t.id,
@@ -95,7 +96,7 @@ class FormikEditMovie extends Component {
     if (image !== undefined) {
       formSubmit.append('poster', image);
     }
-    else{
+    else {
       formSubmit.append('poster', null);
     }
 

@@ -20,34 +20,39 @@ const ImageListView = ({ actor, isSelect, collect, onCheckItem }) => {
 
   useEffect(() => {
     let pathReference = storage.refFromURL("gs://movie-app-d4c77.appspot.com/avatar");
-    let starsRef = pathReference.child(actor.avatar);
+    if (actor.avatar === null || actor.avatar === undefined) {
+      setImgUrl("http://via.placeholder.com/270x400")
+    }
+    else {
+      let starsRef = pathReference.child(actor.avatar);
 
-    starsRef
-      .getDownloadURL()
-      .then((url) => {
-        // let img = document.querySelector(".avatar");
-        setImgUrl(url)
-      })
-      .catch((error) => {
-        // console.log(error);
-        switch (error.code) {
-          case "storage/object-not-found":
-            break;
+      starsRef
+        .getDownloadURL()
+        .then((url) => {
+          // let img = document.querySelector(".avatar");
+          setImgUrl(url)
+        })
+        .catch((error) => {
+          // console.log(error);
+          switch (error.code) {
+            case "storage/object-not-found":
+              break;
 
-          case "storage/unauthorized":
-            // User doesn't have permission to access the object
-            break;
+            case "storage/unauthorized":
+              // User doesn't have permission to access the object
+              break;
 
-          case "storage/unknown":
-            // Unknown error occurred, inspect the server response
-            break;
+            case "storage/unknown":
+              // Unknown error occurred, inspect the server response
+              break;
 
-          default:
-            break;
-        }
-      });
+            default:
+              break;
+          }
+        });
+    }
   })
-
+ 
   return (
     <Colxx sm="6" lg="4" xl="3" className="mb-3" key={actor.id}>
       <ContextMenuTrigger id="menu_id" data={actor.id} collect={collect}>
@@ -61,7 +66,7 @@ const ImageListView = ({ actor, isSelect, collect, onCheckItem }) => {
             {/* <NavLink to={`${actor.id}`} className="w-40 w-sm-100">
               <CardImg top alt={actor.name} src={imgUrl} />
             </NavLink> */}
-              <CardImg top alt={actor.name} src={imgUrl} />
+            <CardImg top alt={actor.name} src={imgUrl} />
             <Badge
               color={actor.statusColor}
               pill

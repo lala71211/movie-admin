@@ -14,7 +14,7 @@ const ContextMenuContainer = ({ onContextMenu, onContextMenuClick }) => {
         <i className="simple-icon-note" /> <span>Sửa</span>
       </MenuItem>
       <MenuItem onClick={onContextMenuClick} data={{ action: "delete" }}>
-        <i className="simple-icon-trash" /> <span>Xóa</span>
+        <i className="simple-icon-trash" /> <span>Xóa hoặc đổi trạng thái</span>
       </MenuItem>
     </ContextMenu>
   );

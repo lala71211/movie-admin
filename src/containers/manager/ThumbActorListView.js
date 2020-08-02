@@ -10,32 +10,37 @@ const ThumbActorListView = ({ actor, isSelect, collect, onCheckItem }) => {
   const [imgUrl, setImgUrl] = useState("http://via.placeholder.com/92x136")
   useEffect(() => {
     let pathReference = storage.refFromURL("gs://movie-app-d4c77.appspot.com/avatar");
-    let starsRef = pathReference.child(actor.avatar);
+    if (actor.avatar === null || actor.avatar === undefined) {
+      setImgUrl("http://via.placeholder.com/270x400")
+    }
+    else {
+      let starsRef = pathReference.child(actor.avatar);
 
-    starsRef
-      .getDownloadURL()
-      .then((url) => {
-        // let img = document.querySelector(".avatar");
-        setImgUrl(url)
-      })
-      .catch((error) => {
-        // console.log(error);
-        switch (error.code) {
-          case "storage/object-not-found":
-            break;
+      starsRef
+        .getDownloadURL()
+        .then((url) => {
+          // let img = document.querySelector(".avatar");
+          setImgUrl(url)
+        })
+        .catch((error) => {
+          // console.log(error);
+          switch (error.code) {
+            case "storage/object-not-found":
+              break;
 
-          case "storage/unauthorized":
-            // User doesn't have permission to access the object
-            break;
+            case "storage/unauthorized":
+              // User doesn't have permission to access the object
+              break;
 
-          case "storage/unknown":
-            // Unknown error occurred, inspect the server response
-            break;
+            case "storage/unknown":
+              // Unknown error occurred, inspect the server response
+              break;
 
-          default:
-            break;
-        }
-      });
+            default:
+              break;
+          }
+        });
+    }
   })
 
   return (
@@ -58,9 +63,9 @@ const ThumbActorListView = ({ actor, isSelect, collect, onCheckItem }) => {
             <div className="card-body align-self-center d-flex flex-column flex-lg-row justify-content-between min-width-zero align-items-lg-center">
               {/* <NavLink to={`?p=${actor.id}`} className="w-40 w-sm-100">
               </NavLink> */}
-                <p className="list-item-heading mb-1 truncate">
-                  {actor.name}
-                </p>
+              <p className="list-item-heading mb-1 truncate">
+                {actor.name}
+              </p>
               {/* <p className="mb-1 text-muted text-small w-10 w-sm-100">
                 {actor.view}
               </p> */}

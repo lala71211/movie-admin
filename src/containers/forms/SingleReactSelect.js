@@ -5,43 +5,64 @@ import IntlMessages from "../../helpers/IntlMessages";
 import CustomSelectInput from "../../components/common/CustomSelectInput";
 import { Colxx } from "../../components/common/CustomBootstrap";
 
-const selectData = [
-    { label: "Trung Quốc", value: "tq", key: 0 },
-    { label: "Việt Nam", value: "vn", key: 1 },
-    { label: "Mỹ", value: "usa", key: 2 }
-  ];
-
 export default class SingleReactSelect extends Component {
   constructor(props) {
     super(props);
-  //   this.state = {
-  //     selectedOption: ""
-  //   };
+    this.state = {
+      selectedOptions: [],
+      selectedOption: ""
+    };
   }
+  handleChangeMulti = selectedOptions => {
+    var e = {
+      target: {
+        name: "roles", value: selectedOptions
+      }
+    }
+    this.props.handleChangeSelect(e)
+  };
   handleSelect = selectedOption => {
     var e = {
-      target:{
-        name:"nation", value: selectedOption}
+      target: {
+        name: "nation", value: selectedOption
+      }
     }
     this.props.handleChangeSelect(e)
   };
 
   render() {
     // console.log(this.props.handleChangeSelect)
-    return (
+    const { options, isMulti,selectedOption,selectedOptions } = this.props
+    // console.log(options)
+    return !isMulti ? (
       <Row>
-        <Colxx xxs="12" md="6" className="mb-5">
+        <Colxx xxs="12" md="12" className="mb-5">
           <Select
             components={{ Input: CustomSelectInput }}
             className="react-select"
             classNamePrefix="react-select"
             name="form-field-name"
-            value={this.props.selectedOption}
+            isMulti={isMulti}
+            value={selectedOption}
             onChange={this.handleSelect}
-            options={selectData}
+            options={options}
           />
         </Colxx>
-      </Row>
-    );
+      </Row>) : (
+        <Row>
+          <Colxx xxs="12" md="12">
+            <Select
+              components={{ Input: CustomSelectInput }}
+              className="react-select"
+              classNamePrefix="react-select"
+              isMulti={isMulti}
+              name="form-field-name"
+              value={selectedOptions}
+              onChange={this.handleChangeMulti}
+              options={options}
+            />
+          </Colxx>
+        </Row>
+      )
   }
 }

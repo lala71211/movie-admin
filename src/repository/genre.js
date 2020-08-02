@@ -18,3 +18,9 @@ export const updateGenre = async (genreForm) => {
     .then(res =>res.data)
     .catch(error => error.response)
 }
+
+export const deleteGenre = async (id) =>{
+    return await axios.delete(`${apiGenre}/${id}`)
+    .then(res =>res.data)
+    .catch(error => error.response)
+}

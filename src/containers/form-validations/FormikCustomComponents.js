@@ -21,11 +21,11 @@ const SignupSchema = Yup.object().shape({
   selectQuality: Yup.string().required("Chọn chất lượng"),
   selectLanguage: Yup.string().required("Chọn ngôn ngữ"),
   imdb: Yup.number()
-    .min(0, "Lớn hơn 0")
+    .min(0, "Lớn hơn hoặc bằng 0")
     .max(10, "Nhỏ hơn 10")
     .required("Nhập giá trị"),
   runtime: Yup.number()
-    .min(0, "Lớn hơn 0")
+    .min(0, "Lớn hơn hoặc bằng 0")
     .required("Nhập giá trị"),
   view: Yup.number()
     .min(0, "Lớn hơn 0")
@@ -41,6 +41,7 @@ const SignupSchema = Yup.object().shape({
   nation: Yup.string()
     .required("Nhập tên quốc gia"),
   adult: Yup.number()
+    .min(0, "Lớn hơn hoặc bằng 0")
     .required("Nhập giá trị"),
   date: Yup.date()
     .nullable()
@@ -82,7 +83,8 @@ class FormikCustomComponents extends Component {
     formSubmit.append('title', payload.name);
     formSubmit.append('nation', payload.nation);
     formSubmit.append('adult', payload.adult);
-    formSubmit.append('genres', payload.genres);
+    console.log(JSON.stringify(payload.genres))
+    formSubmit.append('genres', JSON.stringify(payload.genres));
     formSubmit.append('imdb', payload.imdb);
     formSubmit.append('language', payload.selectLanguage);
     formSubmit.append('quality', payload.selectQuality);
@@ -93,10 +95,6 @@ class FormikCustomComponents extends Component {
     if (image !== undefined) {
       formSubmit.append('poster', image);
     }
-    else {
-      formSubmit.append('poster', null);
-    }
-
     console.log(image)
     this.props.addMovie(formSubmit)
     setSubmitting(false);
@@ -153,7 +151,7 @@ class FormikCustomComponents extends Component {
                   date: null,
                   details: '',
                   nation: '',
-                  adult: ''
+                  adult: 0
                 }}
                 validationSchema={SignupSchema}
                 onSubmit={this.handleSubmit}>
